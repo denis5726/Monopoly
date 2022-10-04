@@ -1,0 +1,14 @@
+TextField, PasswordField {
+    -fx-background-color: white;
+    -fx-prompt-text-fill: rgb(150, 150, 150);
+    -fx-text-fill: rgb(50, 50, 50);
+    -fx-font-size: 25px;
+}
+
+.game-parameter {
+    -fx-font-size: 25px;
+}
+
+TextField.error {
+    -fx-border-color: red;
+}

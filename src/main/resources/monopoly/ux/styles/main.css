@@ -1,0 +1,74 @@
+* {
+	-fx-font-family: 'KabelCTT Medium Bold', Arial;
+	-fx-text-fill: white;
+}
+
+Separator {
+	visibility: false;
+}
+
+.background-color {
+	-fx-background-color: rgb(100, 250, 100);
+}
+
+.background {
+	-fx-pref-width: 1280px;
+	-fx-pref-height: 720px;
+	-fx-background-color: rgb(100, 250, 100);
+}
+
+.header {
+	-fx-font-size: 35px;
+}
+
+Button.button, Button.back-button, Button.next-button {
+	-fx-background-color: rgb(50, 170, 50);
+	-fx-background-radius: 15px;
+	-fx-border-color: rgb(50, 250, 50);
+	-fx-border-width: 5px;
+	-fx-border-radius: 10px;
+	-fx-font-size: 23px;
+	-fx-text-fill: white;
+}
+
+Button.button:hover, Button.back-button:hover, Button.next-button:hover {
+	-fx-background-color: rgb(100, 170, 100);
+}
+
+Button.button:pressed, Button.back-button:pressed, Button.next-button:pressed {
+	-fx-background-color: rgb(30, 150, 30);
+}
+
+Button.back-button, Button.next-button {
+	-fx-pref-width: 150px;
+	-fx-min-width: 150px;
+	-fx-max-width: 150px;
+	-fx-min-height: 100px;
+	-fx-pref-height: 100px;
+	-fx-max-height: 100px;
+	-fx-background-repeat: no-repeat;
+}
+
+Button.back-button {
+	-fx-background-image: url('../images/backBut.png');
+}
+
+Button.back-button:hover {
+	-fx-background-image: url('../images/backButHover.png');
+}
+
+Button.back-button:pressed {
+	-fx-background-image: url('../images/backButPressed.png');
+}
+
+Button.next-button {
+	-fx-background-image: url('../images/nextBut.png');
+}
+
+Button.next-button:hover {
+	-fx-background-image: url('../images/nextButHover.png');
+}
+
+Button.next-button:pressed {
+	-fx-background-image: url('../images/nextButPressed.png');
+}
