@@ -1,4 +1,4 @@
-package monopoly.ux.settings;
+package monopoly.settings;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,12 +25,10 @@ public class SettingsContainer {
 
     public static void setLogin(String login) {
         properties.setProperty("login", login);
-        store();
     }
 
     public static void setPassword(String password) {
         properties.setProperty("password", password);
-        store();
     }
 
     public static String getLogin() {
@@ -41,7 +39,7 @@ public class SettingsContainer {
         return (String) properties.get("password");
     }
 
-    private static void store() {
+    public static void storeAll() {
         try {
             properties.store(new FileOutputStream(path, false), "");
         } catch (IOException e) {

@@ -2,20 +2,20 @@ package monopoly.ux.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.InputMethodEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import monopoly.context.Context;
+import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
 import monopoly.ux.model.CreatedGame;
 import monopoly.ux.window.AlertWindowFabric;
 
-public class CreateGameController implements SceneController{
+public class CreateGameController extends SceneController {
     @FXML
     public Button back;
     @FXML
@@ -79,24 +79,22 @@ public class CreateGameController implements SceneController{
         if (!stepTimeValid) stringBuilder.append("Неправильно указано время хода на выполнение действия (от 5 до 15)");
 
         if (stringBuilder.isEmpty()) {
-            /**
-             * Пробуем создать игру на сервере
-             */
-            if (Math.random() > 0.5) AlertWindowFabric.showErrorAlert("Ошибка", "Ошибка при создании игры на сервере", "");
-            else {
-                CreatedGame game = new CreatedGame();
-                game.setTitle(gameTitle.getText());
-                game.setCheckPassword(checkPassword.isSelected());
-                game.setPassword(passwordField.getText());
-                game.setWaitingTime(Integer.parseInt(waitingTime.getText()));
-                game.setWaitingTime(Integer.parseInt(stepTime.getText()));
+            ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(ModuleInterfaceNet.class);
 
-                System.out.println(game);
+            CreatedGame game = new CreatedGame();
+            game.setTitle(gameTitle.getText());
+            game.setCheckPassword(checkPassword.isSelected());
+            game.setPassword(passwordField.getText());
+            game.setWaitingTime(Integer.parseInt(waitingTime.getText()));
+            game.setWaitingTime(Integer.parseInt(stepTime.getText()));
 
+            String response = moduleInterfaceNet.createGame(game);
+            if (response.equals("Success")) {
                 SceneContext sceneContext = new SceneContext();
                 sceneContext.addProperty("playersNum", playersNumber.getText());
                 MonopolyApplication.setScene("waitingPlayers", sceneContext);
             }
+            else AlertWindowFabric.showErrorAlert("Ошибка", "Ошибка при создании игры на сервере", response);
         }
         else AlertWindowFabric.showErrorAlert("Ошибка", "Неправильные параметры игры", stringBuilder.toString());
     }

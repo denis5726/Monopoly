@@ -5,10 +5,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.settings.SettingsContainer;
+import monopoly.settings.SettingsContainer;
 import monopoly.ux.window.DialogFabric;
 
-public class MainMenuController implements SceneController{
+public class MainMenuController extends SceneController {
     @FXML
     public Button createGame;
     @FXML
@@ -20,20 +20,24 @@ public class MainMenuController implements SceneController{
     @FXML
     public Button quit;
 
+    public MainMenuController() {
+
+    }
+
     @Override
     public void setContext(SceneContext sceneContext) {
 
     }
 
     public void createGameAction(ActionEvent actionEvent) {
-        if (SettingsContainer.getLogin() == null) {
+        if (SettingsContainer.getLogin() == null || SettingsContainer.getLogin().isEmpty()) {
             if (!DialogFabric.showLoginDialog()) return;
         }
         MonopolyApplication.setScene("createGame", new SceneContext());
     }
 
     public void connectGameAction(ActionEvent actionEvent) {
-        if (SettingsContainer.getLogin() == null) {
+        if (SettingsContainer.getPassword() == null || SettingsContainer.getLogin().isEmpty()) {
             if (!DialogFabric.showLoginDialog()) return;
         }
         MonopolyApplication.setScene("connectGame", new SceneContext());

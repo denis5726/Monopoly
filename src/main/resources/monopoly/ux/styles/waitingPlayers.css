@@ -1,0 +1,10 @@
+.player-record {
+    -fx-background-color: rgb(100, 230, 100);
+    -fx-pref-width: 100%;
+    -fx-pref-height: 70px;
+    -fx-alignment: center;
+}
+
+.player-record Label {
+    -fx-font-size: 30px;
+}

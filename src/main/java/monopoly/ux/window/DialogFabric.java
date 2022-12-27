@@ -6,7 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import monopoly.ux.settings.SettingsContainer;
+import monopoly.context.Context;
+import monopoly.net.module.ModuleInterfaceNet;
 
 import java.util.Optional;
 
@@ -88,15 +89,13 @@ public class DialogFabric {
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         if (result.isPresent()) {
-            /**
-             * Авторизация
-             */
-            if (Math.random() > 0.5) {
-                SettingsContainer.setLogin(username.getText());
-                SettingsContainer.setPassword(password.getText());
-                return true;
+            ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(ModuleInterfaceNet.class);
+            String response = moduleInterfaceNet.login(username.getText(), password.getText());
+            if (response.equals("Success")) return true;
+            else {
+                AlertWindowFabric.showErrorAlert("Ошибка авторизации", null, response);
+                return false;
             }
-            else return false;
         }
         else return false;
     }

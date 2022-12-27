@@ -1,17 +1,18 @@
 package monopoly.ux.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import monopoly.context.Context;
+import monopoly.log.Logger;
+import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
 import monopoly.ux.model.CreatedGame;
@@ -19,80 +20,76 @@ import monopoly.ux.window.AlertWindowFabric;
 import monopoly.ux.window.DialogFabric;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class ConnectGameController {
+public class ConnectGameController extends SceneController {
     @FXML
     public Button back;
     @FXML
     public ScrollPane gameScroll;
+    @FXML
     public VBox vBoxGameList;
     @FXML
     public Button next;
-    public Button addGames;
-
     private int selectedGameId = -1;
-
-    private IdCounter idCounter;
-
-    private Map<Integer, CreatedGame> games;
+    private final IdCounter idCounter;
+    private List<CreatedGame> games;
 
     public ConnectGameController() {
         vBoxGameList = new VBox();
-        games = new HashMap<>();
+        games = new ArrayList<>();
         idCounter = new IdCounter();
+        gameScroll = new ScrollPane();
     }
 
-    public void setGameList(List<CreatedGame> gameList) {
-        for (CreatedGame game: gameList) addGame(game);
+    @Override
+    public void setContext(SceneContext sceneContext) {
+        List<CreatedGame> gameList = ((ModuleInterfaceNet)Context.get(ModuleInterfaceNet.class)).getConnectedGames();
+        Logger.trace(gameList.toString());
+        addGames(gameList);
     }
 
-    private void addGame(CreatedGame game) {
-        int id = idCounter.getCount();
-        games.put(id, game);
+    private void addGames(List<CreatedGame> gameList) {
+        games = gameList;
 
-        GridPane gridPane = new GridPane();
-        gridPane.getStyleClass().add("game-record");
-        gridPane.setId(String.valueOf(Integer.valueOf(id)));
-        gridPane.setMinWidth(gameScroll.getPrefWidth());
-        gridPane.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-            if (selectedGameId != -1) {
-                vBoxGameList.getChildren().forEach((obj) -> {
-                    if (selectedGameId == Integer.parseInt(obj.getId())) obj.setStyle("-fx-border-width: 0px");
-                });
-            }
-            selectedGameId = Integer.parseInt(((GridPane)event.getSource()).getId());
-            ((GridPane) event.getSource()).setStyle("-fx-border-width: 3px");
-        });
+        ObservableList<Node> children = vBoxGameList.getChildren();
 
-        double cellWidth = gameScroll.getLayoutBounds().getWidth() / 5.0;
+        for (int i = 0; i < games.size(); i++) {
+            GridPane gridPane = (GridPane) children.get(i);
+            Label title = (Label) ((VBox)gridPane.getChildren().get(0)).getChildren().get(0);
+            Label password = (Label) ((VBox)gridPane.getChildren().get(1)).getChildren().get(0);
+            Label playersNum = (Label) ((VBox)gridPane.getChildren().get(2)).getChildren().get(0);
+            Label waitingTime = (Label) ((VBox)gridPane.getChildren().get(3)).getChildren().get(0);
+            Label stepTime = (Label) ((VBox)gridPane.getChildren().get(4)).getChildren().get(0);
 
-        VBox vBoxTitle = new VBox();
-        vBoxTitle.getChildren().add(new Label(game.getTitle()));
-        vBoxTitle.setAlignment(Pos.CENTER);
-        vBoxTitle.setPrefWidth(cellWidth);
-        VBox vBoxPassword = new VBox();
-        vBoxPassword.getChildren().add(new Label(game.isCheckPassword() ? "Да" : "Нет"));
-        vBoxPassword.setAlignment(Pos.CENTER);
-        vBoxPassword.setPrefWidth(cellWidth);
-        VBox vBoxPlayers = new VBox();
-        vBoxPlayers.getChildren().add(new Label(String.valueOf(game.getPlayersNum())));
-        vBoxPlayers.setAlignment(Pos.CENTER);
-        vBoxPlayers.setPrefWidth(cellWidth);
-        VBox vBoxWaiting = new VBox();
-        vBoxWaiting.getChildren().add(new Label(String.valueOf(game.getWaitingTime())));
-        vBoxWaiting.setAlignment(Pos.CENTER);
-        vBoxWaiting.setPrefWidth(cellWidth);
-        VBox vBoxStep = new VBox();
-        vBoxStep.getChildren().add(new Label(String.valueOf(game.getStepTime())));
-        vBoxStep.setAlignment(Pos.CENTER);
-        vBoxStep.setPrefWidth(cellWidth);
-        gridPane.addRow(0, vBoxTitle, vBoxPassword, vBoxPlayers, vBoxWaiting, vBoxStep);
+            CreatedGame game = games.get(i);
 
-        vBoxGameList.getChildren().add(gridPane);
-        gameScroll.setContent(vBoxGameList);
+            int id = idCounter.getCount();
+
+            gridPane.setVisible(true);
+            gridPane.setId(String.valueOf(id));
+            gridPane.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                if (selectedGameId != -1) {
+                    vBoxGameList.getChildren().forEach((obj) -> {
+                        if (obj.getId() != null
+                            && selectedGameId == Integer.parseInt(obj.getId())) obj.setStyle("-fx-border-width: 0px");
+                    });
+                }
+                selectedGameId = Integer.parseInt(((GridPane)event.getSource()).getId());
+                ((GridPane) event.getSource()).setStyle("-fx-border-width: 3px");
+            });
+
+            title.setText(game.getTitle());
+            password.setText(game.isCheckPassword() ? "Да" : "Нет");
+            playersNum.setText(String.valueOf(game.getPlayersNum()));
+            waitingTime.setText(String.valueOf(game.getWaitingTime()));
+            stepTime.setText(String.valueOf(game.getStepTime()));
+        }
+
+        for (int i = games.size(); i < children.size(); ++i) {
+            GridPane gridPane = (GridPane) children.get(i);
+            gridPane.setVisible(false);
+        }
     }
 
     public void backAction(ActionEvent actionEvent) {
@@ -113,29 +110,12 @@ public class ConnectGameController {
                 return;
             }
         }
-        /**
-         * Подключение к игре
-         */
-        MonopolyApplication.setScene("waitingPlayers", new SceneContext());
-    }
-
-    public void addGamesAction(ActionEvent actionEvent) {
-        List<CreatedGame> list = new ArrayList<>();
-
-        int listSize = (int) (Math.random() * 30);
-        for (int i = 0; i < listSize; i++) {
-            CreatedGame game = new CreatedGame();
-            game.setTitle("Title " + i);
-            game.setCheckPassword(Math.random() > 0.5);
-            if (game.isCheckPassword()) game.setPassword("password");
-            game.setPlayersNum((int) (Math.random() * 2 + 2));
-            game.setWaitingTime((int) (Math.random() * 25 + 5));
-            game.setStepTime((int) (Math.random() * 10 + 5));
-
-            list.add(game);
+        ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(ModuleInterfaceNet.class);
+        String response = moduleInterfaceNet.connectToGame(game);
+        if (response.equals("Success")) {
+            MonopolyApplication.setScene("waitingPlayers", new SceneContext());
         }
-
-        setGameList(list);
+        else AlertWindowFabric.showErrorAlert("Ошибка", "Ошибка подключения к выбранной игре", response);
     }
 
     private static class IdCounter {
