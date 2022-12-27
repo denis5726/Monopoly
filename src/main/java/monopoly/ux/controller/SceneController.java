@@ -7,5 +7,9 @@ public abstract class SceneController {
     public SceneController() {
         Context.put(this.getClass(), this);
     }
-    public abstract void setContext(SceneContext sceneContext);
+    public void onChangeScene() {
+
+    }
+
+    public abstract void onCreateScene(SceneContext sceneContext);
 }

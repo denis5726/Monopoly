@@ -15,7 +15,7 @@ public class SettingsController extends SceneController {
     }
 
     @Override
-    public void setContext(SceneContext sceneContext) {
+    public void onCreateScene(SceneContext sceneContext) {
 
     }
 }

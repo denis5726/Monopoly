@@ -11,7 +11,8 @@ public class RulesController extends SceneController {
     public Button back;
 
     @Override
-    public void setContext(SceneContext sceneContext) {
+    public void onCreateScene(SceneContext sceneContext) {
+
 
     }
 

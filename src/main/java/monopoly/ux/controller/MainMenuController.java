@@ -25,7 +25,7 @@ public class MainMenuController extends SceneController {
     }
 
     @Override
-    public void setContext(SceneContext sceneContext) {
+    public void onCreateScene(SceneContext sceneContext) {
 
     }
 

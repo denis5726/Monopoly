@@ -2,6 +2,7 @@ package monopoly.net.module;
 
 import monopoly.settings.SettingsContainer;
 import monopoly.ux.model.CreatedGame;
+import monopoly.ux.model.GamePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ public class ModuleInterfaceNetImpl implements ModuleInterfaceNet {
             game.setTitle("Title " + i);
             game.setCheckPassword(Math.random() > 0.5);
             if (game.isCheckPassword()) game.setPassword("password");
-            game.setPlayersNum((int) (Math.random() * 2 + 2));
+            game.setPlayersNum((int) (Math.random() * 3 + 2));
             game.setWaitingTime((int) (Math.random() * 25 + 5));
             game.setStepTime((int) (Math.random() * 10 + 5));
 
@@ -57,6 +58,19 @@ public class ModuleInterfaceNetImpl implements ModuleInterfaceNet {
         if (Math.random() > 0.5) response = "Error";
         else response = "Success";
         return response;
+    }
+
+    @Override
+    public List<GamePlayer> getPlayersList(CreatedGame createdGame) {
+        int size = (int) (Math.random() * (createdGame.getPlayersNum() + 1));
+        List<GamePlayer> playerList = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            GamePlayer gamePlayer = new GamePlayer();
+            gamePlayer.setName("Player " + i);
+            playerList.add(gamePlayer);
+        }
+
+        return playerList;
     }
 
     @Override

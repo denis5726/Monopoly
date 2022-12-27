@@ -9,6 +9,7 @@ public class ControllerClassFabric {
             case "settings" -> SettingsController.class;
             case "rules" -> RulesController.class;
             case "waitingPlayers" -> WaitingPlayersController.class;
+            case "game" -> GameController.class;
             default -> throw new RuntimeException("Controller with name scene " + nameScene + " is not found");
         };
     }

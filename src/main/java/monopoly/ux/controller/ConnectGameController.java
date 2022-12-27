@@ -43,7 +43,7 @@ public class ConnectGameController extends SceneController {
     }
 
     @Override
-    public void setContext(SceneContext sceneContext) {
+    public void onCreateScene(SceneContext sceneContext) {
         List<CreatedGame> gameList = ((ModuleInterfaceNet)Context.get(ModuleInterfaceNet.class)).getConnectedGames();
         Logger.trace(gameList.toString());
         addGames(gameList);
@@ -67,8 +67,10 @@ public class ConnectGameController extends SceneController {
             int id = idCounter.getCount();
 
             gridPane.setVisible(true);
-            gridPane.setId(String.valueOf(id));
+            gridPane.setId(String.valueOf(i));
             gridPane.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                Logger.trace("click " + selectedGameId);
+
                 if (selectedGameId != -1) {
                     vBoxGameList.getChildren().forEach((obj) -> {
                         if (obj.getId() != null
@@ -113,7 +115,9 @@ public class ConnectGameController extends SceneController {
         ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(ModuleInterfaceNet.class);
         String response = moduleInterfaceNet.connectToGame(game);
         if (response.equals("Success")) {
-            MonopolyApplication.setScene("waitingPlayers", new SceneContext());
+            SceneContext context = new SceneContext();
+            context.addProperty("game", game);
+            MonopolyApplication.setScene("waitingPlayers", context);
         }
         else AlertWindowFabric.showErrorAlert("Ошибка", "Ошибка подключения к выбранной игре", response);
     }

@@ -36,7 +36,7 @@ public class CreateGameController extends SceneController {
     public Pane root;
 
     @Override
-    public void setContext(SceneContext sceneContext) {
+    public void onCreateScene(SceneContext sceneContext) {
 
     }
 

@@ -31,6 +31,27 @@
                            </children>
                         </HBox>
                      </children>
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
+                           <children>
+                              <Label text="Label" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
+                           <children>
+                              <Label text="Label" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
+                           <children>
+                              <Label text="Label" />
+                           </children>
+                        </HBox>
+                     </children>
                   </VBox>
                </children>
             </VBox>

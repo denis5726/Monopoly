@@ -21,6 +21,8 @@ import monopoly.settings.SettingsContainer;
 public class MonopolyApplication extends Application {
     private static Stage stage;
     private static boolean running = true;
+    private static String currentScene;
+
 
     @Override
     public void start(Stage stage) {
@@ -35,6 +37,7 @@ public class MonopolyApplication extends Application {
         loadApplicationContext();
 
         stage.setTitle("Monopoly");
+
         setScene("mainMenu", new SceneContext());
 
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, (event) -> close());
@@ -49,16 +52,24 @@ public class MonopolyApplication extends Application {
     }
 
     public static void setScene(String nameScene, SceneContext context) {
-        FXMLLoader fxmlLoader = new FXMLLoader(MonopolyApplication.class.getResource("views/" + nameScene + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(
+                MonopolyApplication.class.getResource("views/" + nameScene + ".fxml"));
+
         try {
+            if (currentScene != null) ((SceneController) Context.get(
+                    ControllerClassFabric.getSceneController(currentScene))).onChangeScene();
+
+            currentScene = nameScene;
+
             Scene scene = new Scene(fxmlLoader.load());
             stage.setScene(scene);
-            SceneController sceneController = (SceneController) Context.get(ControllerClassFabric.getSceneController(nameScene));
+            SceneController sceneController = (SceneController) Context.get(
+                    ControllerClassFabric.getSceneController(nameScene));
             context.addProperty("root", scene.getRoot());
-            if (sceneController != null) sceneController.setContext(context);
+            if (sceneController != null) sceneController.onCreateScene(context);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Scene with name " + nameScene + " is not found");
+            Logger.error("Scene with name " + nameScene + " is not found");
         }
 
     }
