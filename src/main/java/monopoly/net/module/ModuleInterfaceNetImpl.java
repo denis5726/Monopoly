@@ -55,10 +55,7 @@ public class ModuleInterfaceNetImpl implements ModuleInterfaceNet {
 
     @Override
     public String connectToGame(CreatedGame createdGame) {
-        String response;
-        if (Math.random() > 0.5) response = "Error";
-        else response = "Success";
-        return response;
+        return "Success";
     }
 
     @Override

@@ -12,8 +12,6 @@ Separator {
 }
 
 .background {
-	-fx-pref-width: 1280px;
-	-fx-pref-height: 720px;
 	-fx-background-color: rgb(100, 250, 100);
 }
 

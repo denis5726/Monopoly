@@ -7,6 +7,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -15,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.GameController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.GameController">
    <children>
       <HBox fx:id="hBox" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1280.0">
          <children>
@@ -32,16 +33,93 @@
                            <font>
                               <Font size="30.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets bottom="3.0" />
+                           </VBox.margin>
                         </Label>
-                        <ScrollPane fx:id="playersPane" hbarPolicy="NEVER" prefHeight="216.0" prefWidth="320.0">
-                           <VBox fx:id="playersVBox" prefWidth="320" />
-                        </ScrollPane>
+                        <VBox fx:id="playersVBox" prefHeight="216.0" prefWidth="100.0">
+                           <children>
+                              <GridPane prefHeight="54.0" styleClass="player">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="214.39999389648438" minWidth="10.0" prefWidth="173.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="138.20001220703125" minWidth="10.0" prefWidth="108.59999389648436" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Label" />
+                                    <Label text="1500$" GridPane.columnIndex="1" />
+                                 </children>
+                                 <padding>
+                                    <Insets left="7.0" right="7.0" />
+                                 </padding>
+                              </GridPane>
+                              <GridPane prefHeight="54.0" styleClass="player">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="173.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="7.0" right="7.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Label" />
+                                    <Label text="1500$" GridPane.columnIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <GridPane prefHeight="54.0" styleClass="player">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="173.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="7.0" right="7.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Label" />
+                                    <Label text="1500$" GridPane.columnIndex="1" />
+                                 </children>
+                              </GridPane>
+                              <GridPane prefHeight="54.0" styleClass="player">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="173.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <VBox.margin>
+                                    <Insets top="3.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="7.0" right="7.0" />
+                                 </padding>
+                                 <children>
+                                    <Label text="Label" />
+                                    <Label text="1500$" GridPane.columnIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </children>
+                        </VBox>
                         <Label text="Чат">
                            <font>
                               <Font size="30.0" />
                            </font>
                         </Label>
-                        <ScrollPane fx:id="chatPane" prefHeight="200.0" prefWidth="200.0">
+                        <ScrollPane fx:id="chatPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
                            <VBox fx:id="chatVBox" />
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -74,7 +152,7 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="rightVBox" prefHeight="200.0" prefWidth="960.0">
+            <VBox fx:id="rightVBox" prefHeight="200.0" prefWidth="960.0" styleClass="player-list">
                <children>
                   <GridPane fx:id="valuesGridPane" prefHeight="80.0" prefWidth="1116.0">
                     <columnConstraints>
@@ -97,7 +175,7 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="574.0" GridPane.columnIndex="1">
                            <children>
-                              <Label text="Ходит Николай Тугарев">
+                              <Label prefHeight="31.0" prefWidth="229.0" text="Ходит Николай Тугарев">
                                  <font>
                                     <Font size="21.0" />
                                  </font>
@@ -106,7 +184,7 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="80.0" prefWidth="425.0" GridPane.columnIndex="2">
                            <children>
-                              <Label text="Время 0:11">
+                              <Label fx:id="stepTime" text="Время 0:11">
                                  <font>
                                     <Font size="21.0" />
                                  </font>
@@ -117,7 +195,11 @@
                   </GridPane>
                   <HBox fx:id="gameHBox" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <ImageView fitHeight="640.0" fitWidth="816.0" pickOnBounds="true" preserveRatio="true" styleClass="gameImageView" />
+                        <AnchorPane fx:id="gamePane" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fitHeight="640.0" fitWidth="816.0" pickOnBounds="true" preserveRatio="true" styleClass="gameImageView" />
+                           </children>
+                        </AnchorPane>
                         <VBox fx:id="leftPanelVBox" alignment="CENTER" prefHeight="200.0" prefWidth="320.0">
                            <children>
                               <Label text="Недвижимость">

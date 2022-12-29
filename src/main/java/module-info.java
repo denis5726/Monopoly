@@ -9,4 +9,7 @@ module monopoly.monopoly {
     exports monopoly.ux.module;
     exports monopoly.ux.controller;
     exports monopoly.ux.model;
+    exports monopoly.ux.module.event;
+    exports monopoly.ux.window;
+    exports monopoly.game.model;
 }

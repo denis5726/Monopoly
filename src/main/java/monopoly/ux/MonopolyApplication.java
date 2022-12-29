@@ -65,7 +65,7 @@ public class MonopolyApplication extends Application {
     private void addDebugSystem() {
         String[] playersNames = new String[] {
                 "denis57", "niktug", "NaGiBaToR228",
-                "SHaRIT.pro", "luckyCoban", "ryzhenkov",
+                "SHaRIT.pro", "luckyKoban", "ryzhenkov",
                 "semenGatchinov", "aue228", "capitalist1337",
                 "fredMonopolist"
         };
@@ -136,6 +136,13 @@ public class MonopolyApplication extends Application {
                     int indexMessage = (int) (Math.random() * messages.length);
                     moduleInterfaceUI.addMessageChat(playersInGame.get(indexPlayer)
                             + ": " + messages[indexMessage]);
+                }
+                case "b" -> {
+                    if (playersInGame.size() == 0) return;
+                    int indexPlayer = (int) (Math.random() * playersInGame.size());
+                    GamePlayer player = new GamePlayer();
+                    player.setName(playersInGame.get(indexPlayer));
+                    moduleInterfaceUI.setPlayerMoney(player, (int) (Math.random() * 100000));
                 }
             }
         });

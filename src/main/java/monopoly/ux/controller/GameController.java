@@ -2,15 +2,15 @@ package monopoly.ux.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import monopoly.context.Context;
+import monopoly.game.model.PlayerInfo;
+import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
@@ -18,7 +18,9 @@ import monopoly.ux.model.Game;
 import monopoly.ux.model.GamePlayer;
 import monopoly.ux.model.GameQuestion;
 import monopoly.ux.window.DialogFabric;
+import monopoly.ux.window.PlayerInfoWindow;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameController extends SceneController {
@@ -32,8 +34,6 @@ public class GameController extends SceneController {
     public Button back;
     @FXML
     public VBox rightPanelVBox;
-    @FXML
-    public ScrollPane playersPane;
     @FXML
     public ScrollPane chatPane;
     @FXML
@@ -58,6 +58,11 @@ public class GameController extends SceneController {
     public VBox chatVBox;
     @FXML
     public VBox playersVBox;
+    @FXML
+    public AnchorPane gamePane;
+    @FXML
+    public Label stepTime;
+    private PlayerInfoWindow playerInfoWindow;
     private Game game;
     private List<GamePlayer> playerList;
 
@@ -70,19 +75,56 @@ public class GameController extends SceneController {
     public void onCreateScene(SceneContext sceneContext) {
         game = (Game) sceneContext.getProperty("game");
         playerList = game.getPlayers();
+        List<Circle> playerCirles = new ArrayList<>();
 
-        for (GamePlayer player : playerList) {
-            Label playerName = new Label(player.getName());
-            playerName.getStyleClass().add("player");
-            playersVBox.getChildren().add(playerName);
+        for (int i = 0; i < playerList.size(); i++) {
+            getPlayerLabel(i, 0).setText(playerList.get(i).getName());
+            getPlayerLabel(i, 1).setText("1500$");
+            GridPane gridPane = (GridPane) playersVBox.getChildren().get(i);
+            gridPane.setOnContextMenuRequested((event) -> {
+                String playerName = ((Label) gridPane.getChildren().get(0)).getText();
+                List<GamePlayer> players = playerList.stream()
+                        .filter((obj) -> obj.getName().equals(playerName))
+                        .toList();
+                showPlayerInfo(players.get(0), gridPane);
+            });
+            Circle player = new Circle();
+            player.setRadius(10);
+            player.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
+            player.setLayoutX(Math.random() * gamePane.getPrefWidth());
+            player.setLayoutY(Math.random() * gamePane.getPrefHeight());
+            playerList.get(i).setCircle(player);
+            playerCirles.add(player);
+        }
+
+        gamePane.getChildren().addAll(playerCirles);
+
+        for (int i = playerList.size(); i < playersVBox.getChildren().size(); ++i) {
+            playersVBox.getChildren().get(i).setVisible(false);
         }
 
         super.onCreateScene(sceneContext);
     }
 
+    private void showPlayerInfo(GamePlayer gamePlayer, Node parentNode) {
+        if (playerInfoWindow != null) playerInfoWindow.hide();
+
+        ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
+
+        PlayerInfo playerInfo = moduleInterfaceGame.getPlayerInfo(gamePlayer);
+
+        PlayerInfoWindow.load(playerInfo);
+        playerInfoWindow = PlayerInfoWindow.getInstance();
+    }
+
+    private Label getPlayerLabel(int row, int column) {
+        return (Label)((GridPane) playersVBox.getChildren().get(row)).getChildren().get(column);
+    }
+
     @Override
     protected void onSetPlayerMoney(GamePlayer gamePlayer, int money) {
-
+        int index = playerList.indexOf(gamePlayer);
+        getPlayerLabel(index, 1).setText(money + "$");
     }
 
     @Override
@@ -102,7 +144,7 @@ public class GameController extends SceneController {
 
     @Override
     protected void onSetStepCountdown(int stepCountdown) {
-
+        stepTime.setText("Время: " + (stepCountdown / 60) + ":" + (stepCountdown % 60));
     }
 
     @Override
@@ -112,16 +154,31 @@ public class GameController extends SceneController {
 
     @Override
     protected void onAddLog(String player, String text) {
-        Label message = new Label(player + " " + text);
-        message.getStyleClass().add("log");
-        chatVBox.getChildren().add(message);
+        addChatLog(player + " " + text);
     }
 
     @Override
     protected void onAddMessageChat(String text) {
-        Label message = new Label(text);
+        addChatMessage(text);
+    }
+
+    private void addChatMessage(String text) {
+        Text message = new Text(text);
         message.getStyleClass().add("chat");
-        chatVBox.getChildren().add(message);
+        addChatText(message);
+    }
+
+    private void addChatText(Text text) {
+        text.setWrappingWidth(chatPane.getWidth() - 30);
+        chatVBox.getChildren().add(text);
+        chatPane.setVvalue(1);
+    }
+
+    private void addChatLog(String text) {
+        Text log = new Text(text);
+        log.getStyleClass().add("log");
+        log.setFill(Color.RED);
+        addChatText(log);
     }
 
     public void backButtonAction(ActionEvent actionEvent) {
@@ -130,9 +187,7 @@ public class GameController extends SceneController {
 
     public void sendMessageAction(ActionEvent actionEvent) {
         if (chatMessageField.getText().isEmpty()) return;
-        Label message = new Label("Вы: " + chatMessageField.getText());
-        message.getStyleClass().add("chat");
-        chatVBox.getChildren().add(message);
+        addChatMessage("Вы: " + chatMessageField.getText());
         ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get("moduleInterfaceNet");
         moduleInterfaceNet.sendChatMessage(chatMessageField.getText());
         chatMessageField.setText("");
