@@ -6,5 +6,7 @@ module monopoly.monopoly {
 
     opens monopoly.ux to javafx.fxml;
     exports monopoly.ux;
+    exports monopoly.ux.module;
     exports monopoly.ux.controller;
+    exports monopoly.ux.model;
 }

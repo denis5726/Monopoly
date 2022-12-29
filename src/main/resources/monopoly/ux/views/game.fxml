@@ -15,11 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:id="pane"
-      maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="400.0" prefWidth="600.0"
-      styleClass="background" fx:controller="monopoly.ux.controller.GameController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.GameController">
    <children>
       <HBox fx:id="hBox" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1280.0">
          <children>
@@ -37,8 +33,8 @@
                               <Font size="30.0" />
                            </font>
                         </Label>
-                        <ScrollPane fx:id="playersPane" prefHeight="216.0" prefWidth="320.0" hbarPolicy="NEVER">
-                           <VBox fx:id="playersVBox" prefWidth="320"/>
+                        <ScrollPane fx:id="playersPane" hbarPolicy="NEVER" prefHeight="216.0" prefWidth="320.0">
+                           <VBox fx:id="playersVBox" prefWidth="320" />
                         </ScrollPane>
                         <Label text="Чат">
                            <font>
@@ -46,7 +42,10 @@
                            </font>
                         </Label>
                         <ScrollPane fx:id="chatPane" prefHeight="200.0" prefWidth="200.0">
-                           <VBox fx:id="chatVBox"/>
+                           <VBox fx:id="chatVBox" />
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
                         </ScrollPane>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>

@@ -16,11 +16,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import monopoly.context.Context;
-import monopoly.log.Logger;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
+import monopoly.ux.model.Game;
 import monopoly.ux.model.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class WaitingPlayersController extends SceneController {
     public HBox hBox;
     @FXML
     public VBox vBox;
+    private final List<Player> players = new ArrayList<>();
 
     @Override
     public void onResize() {
@@ -49,13 +51,32 @@ public class WaitingPlayersController extends SceneController {
         hBox.setPrefSize(w, h);
     }
 
-    private void setPlayersList(List<Player> playerList) {
-        ObservableList<Node> children = this.playersList.getChildren();
-        for (int i = 0; i < playerList.size(); ++i) {
-            ((Label)((HBox) children.get(i)).getChildren().get(0)).setText(playerList.get(i).getName());
+    @Override
+    public void onAddPlayer(Player player) {
+        players.add(player);
+        setPlayersList();
+    }
+
+    @Override
+    public void onRemovePlayer(Player player) {
+        players.remove(player);
+        setPlayersList();
+    }
+
+    @Override
+    protected void onStartGame(Game game) {
+        SceneContext sceneContext = new SceneContext();
+        sceneContext.addProperty("game", game);
+        MonopolyApplication.setScene("game", sceneContext);
+    }
+
+    private void setPlayersList() {
+        ObservableList<Node> children = playersList.getChildren();
+        for (int i = 0; i < players.size(); ++i) {
+            ((Label)((HBox) children.get(i)).getChildren().get(0)).setText(players.get(i).getName());
             children.get(i).setVisible(true);
         }
-        for (int i = playerList.size(); i < children.size(); i++) {
+        for (int i = players.size(); i < children.size(); i++) {
             children.get(i).setVisible(false);
         }
     }
@@ -70,8 +91,6 @@ public class WaitingPlayersController extends SceneController {
                     protected String call() throws Exception {
                         Thread.sleep(1000);
                         count.set((count.get() + 1) % 3);
-
-                        Logger.trace("running");
 
                         char[] str = new char[count.get()];
                         Arrays.fill(str, '.');
@@ -92,12 +111,15 @@ public class WaitingPlayersController extends SceneController {
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
-        Logger.trace(this.toString());
-
         updatingHeaderService();
+
+        ObservableList<Node> children = playersList.getChildren();
+
+        for (Node child : children) child.setVisible(false);
 
         super.onCreateScene(sceneContext);
     }
+
     public void backAction(ActionEvent actionEvent) {
         MonopolyApplication.setScene("mainMenu", new SceneContext());
     }

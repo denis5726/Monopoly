@@ -19,76 +19,15 @@ import java.util.Queue;
 public abstract class SceneController {
     private boolean enabled;
     private static final Queue<UIEvent> eventQueue = new LinkedList<>();
+
+    private final EventObserver eventObserver = new EventObserver();
+
     public SceneController() {
         Context.put(getClassName(), this);
+    }
 
-        Service<UIEvent> eventObserver = new Service<>() {
-            @Override
-            protected Task<UIEvent> createTask() {
-                return new Task<>() {
-                    @Override
-                    protected UIEvent call() throws Exception {
-                        while (eventQueue.isEmpty()) {
-                            try {
-                                Thread.sleep(10);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        return eventQueue.peek();
-                    }
-                };
-            }
-        };
-
-        eventObserver.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (event) -> {
-            if (enabled) eventQueue.remove();
-            else {
-                eventObserver.restart();
-                return;
-            }
-
-            UIEvent uiEvent = eventObserver.getValue();
-
-            if (uiEvent instanceof AddPlayerEvent)
-                this.onAddPlayer(((AddPlayerEvent) uiEvent).getPlayer());
-            else if (uiEvent instanceof SetPlayersEvent)
-                this.onSetPlayers(((SetPlayersEvent) uiEvent).getPlayer());
-            else if (uiEvent instanceof RemovePlayerEvent)
-                this.onRemovePlayer(((RemovePlayerEvent) uiEvent).getPlayer());
-            else if (uiEvent instanceof AddGameEvent)
-                this.onAddGame(((AddGameEvent) uiEvent).getCreatedGame());
-            else if (uiEvent instanceof SetGamesEvent)
-                this.onSetGames(((SetGamesEvent) uiEvent).getGames());
-            else if (uiEvent instanceof RemoveGameEvent)
-                this.onRemoveGame(((RemoveGameEvent) uiEvent).getCreatedGame());
-            else if (uiEvent instanceof SetPlayerMoneyEvent)
-                this.onSetPlayerMoney(((SetPlayerMoneyEvent) uiEvent).getPlayer(),
-                        ((SetPlayerMoneyEvent) uiEvent).getMoney());
-            else if (uiEvent instanceof RemovePlayerToEvent)
-                this.onRemovePlayerTo(((RemovePlayerToEvent) uiEvent).getPlayer(),
-                        ((RemovePlayerToEvent) uiEvent).getPosition());
-            else if (uiEvent instanceof SetHomeNumEvent)
-                this.onSetHomeNum(((SetHomeNumEvent) uiEvent).getPosition(),
-                        ((SetHomeNumEvent) uiEvent).getNum());
-            else if (uiEvent instanceof ShowDialogEvent)
-                this.onShowDialog(((ShowDialogEvent) uiEvent).getQuestion(),
-                        ((ShowDialogEvent) uiEvent).getWaitingTime());
-            else if (uiEvent instanceof SetStepCountdownEvent)
-                this.onSetStepCountdown(((SetStepCountdownEvent) uiEvent).getCountdown());
-            else if (uiEvent instanceof ShowDiceEvent)
-                this.onShowDices(((ShowDiceEvent) uiEvent).getValue_1(),
-                        ((ShowDiceEvent) uiEvent).getValue_2());
-            else if (uiEvent instanceof AddLogEvent)
-                this.onAddLog(((AddLogEvent) uiEvent).getPlayer(),
-                        ((AddLogEvent) uiEvent).getText());
-            else if (uiEvent instanceof AddMessageChatEvent)
-                this.onAddMessageChat(((AddMessageChatEvent) uiEvent).getText());
-            else if (uiEvent instanceof StartGameEvent)
-                this.onStartGame(((StartGameEvent) uiEvent).getGame());
-
-            eventObserver.restart();
-        });
+    public static void pollEvent(UIEvent uiEvent) {
+        eventQueue.add(uiEvent);
     }
 
     private String getClassName() {
@@ -99,8 +38,8 @@ public abstract class SceneController {
         return stringBuilder.toString();
     }
 
-    public Scene getScene() {
-        String nameScene = "views/" + getClassName() + ".fxml";
+    public static Scene getScene(String name) {
+        String nameScene = "views/" + name + ".fxml";
 
         FXMLLoader fxmlLoader = new FXMLLoader(MonopolyApplication.loadResource(nameScene));
 
@@ -131,63 +70,147 @@ public abstract class SceneController {
         return enabled;
     }
 
-    public void onAddPlayer(Player player) {
+    protected void onAddPlayer(Player player) {
 
     }
 
-    void onSetPlayers(List<Player> players) {
+    protected void onSetPlayers(List<Player> players) {
 
     }
 
-    void onRemovePlayer(Player player) {
+    protected void onRemovePlayer(Player player) {
 
     }
 
-    void onAddGame(CreatedGame createdGame) {
+    protected void onAddGame(CreatedGame createdGame) {
 
     }
 
-    void onSetGames(List<CreatedGame> gameList) {
+    protected void onSetGames(List<CreatedGame> gameList) {
 
     }
 
-    void onRemoveGame(CreatedGame createdGame) {
+    protected void onRemoveGame(CreatedGame createdGame) {
 
     }
 
-    void onSetPlayerMoney(GamePlayer gamePlayer, int money) {
+    protected void onSetPlayerMoney(GamePlayer gamePlayer, int money) {
 
     }
 
-    void onRemovePlayerTo(GamePlayer gamePlayer, int position) {
+    protected void onRemovePlayerTo(GamePlayer gamePlayer, int position) {
 
     }
 
-    void onSetHomeNum(int position, int num) {
+    protected void onSetHomeNum(int position, int num) {
 
     }
 
-    void onShowDialog(GameQuestion question, int waitingTime) {
+    protected void onShowDialog(GameQuestion question, int waitingTime) {
 
     }
 
-    void onSetStepCountdown(int stepCountdown) {
+    protected void onSetStepCountdown(int stepCountdown) {
 
     }
 
-    void onShowDices(int value_1, int value_2) {
+    protected void onShowDices(int value_1, int value_2) {
 
     }
 
-    void onAddLog(String player, String text) {
+    protected void onAddLog(String player, String text) {
 
     }
 
-    void onAddMessageChat(String text) {
+    protected void onAddMessageChat(String text) {
 
     }
 
-    void onStartGame(Game game) {
+    protected void onStartGame(Game game) {
 
+    }
+
+    private static class EventObserver {
+        private final Service<UIEvent> eventObserver;
+        public EventObserver() {
+            SceneController sceneController = MonopolyApplication.getCurrentScene();
+
+            if (sceneController != null) sceneController.eventObserver.eventObserver.cancel();
+
+            eventObserver = new Service<>() {
+                @Override
+                protected Task<UIEvent> createTask() {
+                    return new Task<>() {
+                        @Override
+                        protected UIEvent call() throws Exception {
+                            while (eventQueue.isEmpty()) {
+                                try {
+                                    Thread.sleep(10);
+                                } catch (InterruptedException e) {
+                                    return null;
+                                }
+                            }
+                            return eventQueue.peek();
+                        }
+                    };
+                }
+            };
+
+            eventObserver.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (event) -> {
+                if (eventObserver.getValue() == null) return;
+
+                SceneController controller = MonopolyApplication.getCurrentScene();
+
+                if (controller == null || eventQueue.isEmpty()) {
+                    eventObserver.restart();
+                    return;
+                }
+
+                eventQueue.remove();
+
+                UIEvent uiEvent = eventObserver.getValue();
+
+                if (uiEvent instanceof AddPlayerEvent)
+                    controller.onAddPlayer(((AddPlayerEvent) uiEvent).getPlayer());
+                else if (uiEvent instanceof SetPlayersEvent)
+                    controller.onSetPlayers(((SetPlayersEvent) uiEvent).getPlayer());
+                else if (uiEvent instanceof RemovePlayerEvent)
+                    controller.onRemovePlayer(((RemovePlayerEvent) uiEvent).getPlayer());
+                else if (uiEvent instanceof AddGameEvent)
+                    controller.onAddGame(((AddGameEvent) uiEvent).getCreatedGame());
+                else if (uiEvent instanceof SetGamesEvent)
+                    controller.onSetGames(((SetGamesEvent) uiEvent).getGames());
+                else if (uiEvent instanceof RemoveGameEvent)
+                    controller.onRemoveGame(((RemoveGameEvent) uiEvent).getCreatedGame());
+                else if (uiEvent instanceof SetPlayerMoneyEvent)
+                    controller.onSetPlayerMoney(((SetPlayerMoneyEvent) uiEvent).getPlayer(),
+                            ((SetPlayerMoneyEvent) uiEvent).getMoney());
+                else if (uiEvent instanceof RemovePlayerToEvent)
+                    controller.onRemovePlayerTo(((RemovePlayerToEvent) uiEvent).getPlayer(),
+                            ((RemovePlayerToEvent) uiEvent).getPosition());
+                else if (uiEvent instanceof SetHomeNumEvent)
+                    controller.onSetHomeNum(((SetHomeNumEvent) uiEvent).getPosition(),
+                            ((SetHomeNumEvent) uiEvent).getNum());
+                else if (uiEvent instanceof ShowDialogEvent)
+                    controller.onShowDialog(((ShowDialogEvent) uiEvent).getQuestion(),
+                            ((ShowDialogEvent) uiEvent).getWaitingTime());
+                else if (uiEvent instanceof SetStepCountdownEvent)
+                    controller.onSetStepCountdown(((SetStepCountdownEvent) uiEvent).getCountdown());
+                else if (uiEvent instanceof ShowDiceEvent)
+                    controller.onShowDices(((ShowDiceEvent) uiEvent).getValue_1(),
+                            ((ShowDiceEvent) uiEvent).getValue_2());
+                else if (uiEvent instanceof AddLogEvent)
+                    controller.onAddLog(((AddLogEvent) uiEvent).getPlayer(),
+                            ((AddLogEvent) uiEvent).getText());
+                else if (uiEvent instanceof AddMessageChatEvent)
+                    controller.onAddMessageChat(((AddMessageChatEvent) uiEvent).getText());
+                else if (uiEvent instanceof StartGameEvent)
+                    controller.onStartGame(((StartGameEvent) uiEvent).getGame());
+
+                eventObserver.restart();
+            });
+
+            eventObserver.start();
+        }
     }
 }

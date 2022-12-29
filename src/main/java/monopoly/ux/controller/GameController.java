@@ -14,8 +14,9 @@ import monopoly.context.Context;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.model.CreatedGame;
+import monopoly.ux.model.Game;
 import monopoly.ux.model.GamePlayer;
+import monopoly.ux.model.GameQuestion;
 import monopoly.ux.window.DialogFabric;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class GameController extends SceneController {
     public VBox chatVBox;
     @FXML
     public VBox playersVBox;
-    private CreatedGame createdGame;
+    private Game game;
     private List<GamePlayer> playerList;
 
     @Override
@@ -67,8 +68,8 @@ public class GameController extends SceneController {
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
-        createdGame = (CreatedGame) sceneContext.getProperty("game");
-        playerList = (List<GamePlayer>) sceneContext.getProperty("players");
+        game = (Game) sceneContext.getProperty("game");
+        playerList = game.getPlayers();
 
         for (GamePlayer player : playerList) {
             Label playerName = new Label(player.getName());
@@ -77,6 +78,50 @@ public class GameController extends SceneController {
         }
 
         super.onCreateScene(sceneContext);
+    }
+
+    @Override
+    protected void onSetPlayerMoney(GamePlayer gamePlayer, int money) {
+
+    }
+
+    @Override
+    protected void onRemovePlayerTo(GamePlayer gamePlayer, int position) {
+
+    }
+
+    @Override
+    protected void onSetHomeNum(int position, int num) {
+
+    }
+
+    @Override
+    protected void onShowDialog(GameQuestion question, int waitingTime) {
+
+    }
+
+    @Override
+    protected void onSetStepCountdown(int stepCountdown) {
+
+    }
+
+    @Override
+    protected void onShowDices(int value_1, int value_2) {
+
+    }
+
+    @Override
+    protected void onAddLog(String player, String text) {
+        Label message = new Label(player + " " + text);
+        message.getStyleClass().add("log");
+        chatVBox.getChildren().add(message);
+    }
+
+    @Override
+    protected void onAddMessageChat(String text) {
+        Label message = new Label(text);
+        message.getStyleClass().add("chat");
+        chatVBox.getChildren().add(message);
     }
 
     public void backButtonAction(ActionEvent actionEvent) {
@@ -91,12 +136,13 @@ public class GameController extends SceneController {
         ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get("moduleInterfaceNet");
         moduleInterfaceNet.sendChatMessage(chatMessageField.getText());
         chatMessageField.setText("");
-        chatPane.setVvalue(chatPane.getVmax());
     }
 
     public void beginDialAction(ActionEvent actionEvent) {
+
     }
 
     public void dropDiceAction(ActionEvent actionEvent) {
+
     }
 }

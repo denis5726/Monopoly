@@ -62,30 +62,6 @@ public class ModuleInterfaceNetImpl implements ModuleInterfaceNet {
     }
 
     @Override
-    public List<GamePlayer> getPlayersList(CreatedGame createdGame) {
-        String[] playersNames = new String[] {
-                "denis57", "niktug", "NaGiBaToR228",
-                "SHaRIT.pro", "luckyCoban", "ryzhenkov",
-                "semenGatchinov", "aue228", "capitalist1337",
-                "fredMonopolist"
-        };
-
-        List<String> playersNamesList = new ArrayList<>(Arrays.asList(playersNames));
-
-        int size = (int) (Math.random() * (createdGame.getPlayersNum() + 1));
-        List<GamePlayer> playerList = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            GamePlayer gamePlayer = new GamePlayer();
-            int index = (int) (Math.random() * playersNamesList.size());
-            gamePlayer.setName(playersNamesList.get(index));
-            playersNamesList.remove(index);
-            playerList.add(gamePlayer);
-        }
-
-        return playerList;
-    }
-
-    @Override
     public void sendChatMessage(String message) {
 
     }
