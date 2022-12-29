@@ -12,7 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNet;
@@ -31,16 +33,24 @@ public class WaitingPlayersController extends SceneController {
     public VBox playersList;
     @FXML
     public Button back;
-
+    @FXML
+    public Pane pane;
+    @FXML
+    public HBox hBox;
+    @FXML
+    public VBox vBox;
     private CreatedGame createdGame;
-
     private boolean isRunning = true;
 
-    public WaitingPlayersController() {
-        header = new Label();
+    @Override
+    public void onResize() {
+        Stage window = (Stage) Context.get("mainWindow");
 
-        updatingHeaderService();
-        checkingPlayersService();
+        double w = window.getWidth();
+        double h = window.getHeight();
+
+        pane.setPrefSize(w, h);
+        hBox.setPrefSize(w, h);
     }
 
     private void checkingPlayersService() {
@@ -53,7 +63,7 @@ public class WaitingPlayersController extends SceneController {
                         Thread.sleep(1000);
 
                         ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(
-                                ModuleInterfaceNet.class);
+                                "moduleInterfaceNet");
 
                         return moduleInterfaceNet.getPlayersList(createdGame);
                     }
@@ -119,9 +129,16 @@ public class WaitingPlayersController extends SceneController {
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
-        isRunning = true;
         createdGame = (CreatedGame) sceneContext.getProperty("game");
+
+        isRunning = true;
+
         Logger.trace(this.toString());
+
+        onResize();
+
+        updatingHeaderService();
+        checkingPlayersService();
     }
 
     @Override

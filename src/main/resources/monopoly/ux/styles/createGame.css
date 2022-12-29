@@ -5,6 +5,15 @@ TextField, PasswordField {
     -fx-font-size: 25px;
 }
 
+HBox {
+    -fx-start-margin: 10px;
+    -fx-end-margin: 10px;
+}
+
+#hBox {
+    -fx-padding: 10px;
+}
+
 .game-parameter {
     -fx-font-size: 25px;
 }

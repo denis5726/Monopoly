@@ -19,5 +19,7 @@ public interface ModuleInterfaceNet {
 
     List<GamePlayer> getPlayersList(CreatedGame createdGame);
 
+    void sendChatMessage(String message);
+
     void leaveGameQueue();
 }

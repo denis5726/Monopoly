@@ -60,6 +60,16 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
+    public void addEventChat(String text) {
+
+    }
+
+    @Override
+    public void addMessageChat(String text) {
+
+    }
+
+    @Override
     public void setStepCountdown(int stepCountdown) {
 
     }

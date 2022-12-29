@@ -26,5 +26,9 @@ public interface ModuleInterfaceUI {
 
     void showDices(int value_1, int value_2);
 
+    void addEventChat(String text);
+
+    void addMessageChat(String text);
+
     void startGame(Game game);
 }

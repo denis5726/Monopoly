@@ -13,9 +13,4 @@ public class SettingsController extends SceneController {
     public void backAction(ActionEvent actionEvent) {
         MonopolyApplication.setScene("mainMenu", new SceneContext());
     }
-
-    @Override
-    public void onCreateScene(SceneContext sceneContext) {
-
-    }
 }

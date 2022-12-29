@@ -1,15 +1,14 @@
 package monopoly.ux.controller;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNet;
@@ -31,66 +30,109 @@ public class ConnectGameController extends SceneController {
     public VBox vBoxGameList;
     @FXML
     public Button next;
+    @FXML
+    public Pane pane;
+    @FXML
+    public HBox hBox;
+    @FXML
+    public VBox vBox;
     private int selectedGameId = -1;
-    private final IdCounter idCounter;
     private List<CreatedGame> games;
 
     public ConnectGameController() {
-        vBoxGameList = new VBox();
         games = new ArrayList<>();
-        idCounter = new IdCounter();
         gameScroll = new ScrollPane();
     }
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
-        List<CreatedGame> gameList = ((ModuleInterfaceNet)Context.get(ModuleInterfaceNet.class)).getConnectedGames();
+        List<CreatedGame> gameList = ((ModuleInterfaceNet)Context.get("moduleInterfaceNet")).getConnectedGames();
         Logger.trace(gameList.toString());
         addGames(gameList);
+
+        onResize();
+    }
+
+    @Override
+    public void onResize() {
+        Stage window = (Stage) Context.get("mainWindow");
+
+        double w = window.getWidth();
+        double h = window.getHeight();
+
+        pane.setPrefSize(w, h);
+
+        hBox.setPrefSize(w, h);
+    }
+
+    private VBox getVBox() {
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setPrefHeight(200);
+        vBox.setMinWidth(100);
+        return vBox;
     }
 
     private void addGames(List<CreatedGame> gameList) {
         games = gameList;
 
-        ObservableList<Node> children = vBoxGameList.getChildren();
-
         for (int i = 0; i < games.size(); i++) {
-            GridPane gridPane = (GridPane) children.get(i);
-            Label title = (Label) ((VBox)gridPane.getChildren().get(0)).getChildren().get(0);
-            Label password = (Label) ((VBox)gridPane.getChildren().get(1)).getChildren().get(0);
-            Label playersNum = (Label) ((VBox)gridPane.getChildren().get(2)).getChildren().get(0);
-            Label waitingTime = (Label) ((VBox)gridPane.getChildren().get(3)).getChildren().get(0);
-            Label stepTime = (Label) ((VBox)gridPane.getChildren().get(4)).getChildren().get(0);
+            GridPane gridPane = new GridPane();
+            gridPane.setMaxWidth(926);
+            gridPane.setMinWidth(926);
+            gridPane.setPrefHeight(84);
+            gridPane.getStyleClass().add("game-record");
 
-            CreatedGame game = games.get(i);
+            Logger.trace(String.valueOf(gridPane.getWidth()));
 
-            int id = idCounter.getCount();
+            ColumnConstraints columnConstraints = new ColumnConstraints();
+            columnConstraints.setHgrow(Priority.ALWAYS);
+            columnConstraints.setMinWidth(10);
+            columnConstraints.setPrefWidth(100);
+            gridPane.getColumnConstraints().addAll(
+                    columnConstraints, columnConstraints, columnConstraints, columnConstraints, columnConstraints
+            );
+            RowConstraints rowConstraints = new RowConstraints();
+            rowConstraints.setVgrow(Priority.ALWAYS);
+            rowConstraints.setMinHeight(10);
+            rowConstraints.setPrefHeight(30);
+            gridPane.getRowConstraints().add(rowConstraints);
+
+            VBox titleVBox = getVBox();
+            VBox passwordVBox = getVBox();
+            VBox playersNumVBox = getVBox();
+            VBox waitingTimeVBox = getVBox();
+            VBox stepTimeVBox = getVBox();
+
+            Label title = new Label(games.get(i).getTitle());
+            Label password = new Label(games.get(i).isCheckPassword() ? "Да" : "Нет");
+            Label playersNum = new Label(String.valueOf(games.get(i).getPlayersNum()));
+            Label waitingTime = new Label(String.valueOf(games.get(i).getWaitingTime()));
+            Label stepTime = new Label(String.valueOf(games.get(i).getStepTime()));
+
+            titleVBox.getChildren().add(title);
+            passwordVBox.getChildren().add(password);
+            playersNumVBox.getChildren().add(playersNum);
+            waitingTimeVBox.getChildren().add(waitingTime);
+            stepTimeVBox.getChildren().add(stepTime);
+
+            gridPane.addRow(0, titleVBox, passwordVBox, playersNumVBox, waitingTimeVBox, stepTimeVBox);
 
             gridPane.setVisible(true);
             gridPane.setId(String.valueOf(i));
             gridPane.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
-                Logger.trace("click " + selectedGameId);
-
                 if (selectedGameId != -1) {
                     vBoxGameList.getChildren().forEach((obj) -> {
                         if (obj.getId() != null
-                            && selectedGameId == Integer.parseInt(obj.getId())) obj.setStyle("-fx-border-width: 0px");
+                                && selectedGameId == Integer.parseInt(obj.getId()))
+                            obj.setStyle("-fx-border-width: 0px");
                     });
                 }
-                selectedGameId = Integer.parseInt(((GridPane)event.getSource()).getId());
+                selectedGameId = Integer.parseInt(((GridPane) event.getSource()).getId());
                 ((GridPane) event.getSource()).setStyle("-fx-border-width: 3px");
             });
 
-            title.setText(game.getTitle());
-            password.setText(game.isCheckPassword() ? "Да" : "Нет");
-            playersNum.setText(String.valueOf(game.getPlayersNum()));
-            waitingTime.setText(String.valueOf(game.getWaitingTime()));
-            stepTime.setText(String.valueOf(game.getStepTime()));
-        }
-
-        for (int i = games.size(); i < children.size(); ++i) {
-            GridPane gridPane = (GridPane) children.get(i);
-            gridPane.setVisible(false);
+            vBoxGameList.getChildren().add(gridPane);
         }
     }
 
@@ -112,21 +154,12 @@ public class ConnectGameController extends SceneController {
                 return;
             }
         }
-        ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(ModuleInterfaceNet.class);
+        ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get("moduleInterfaceNet");
         String response = moduleInterfaceNet.connectToGame(game);
         if (response.equals("Success")) {
             SceneContext context = new SceneContext();
             context.addProperty("game", game);
             MonopolyApplication.setScene("waitingPlayers", context);
-        }
-        else AlertWindowFabric.showErrorAlert("Ошибка", "Ошибка подключения к выбранной игре", response);
-    }
-
-    private static class IdCounter {
-        private static int count = 0;
-
-        public int getCount() {
-            return count++;
-        }
+        } else AlertWindowFabric.showErrorAlert("Ошибка", "Ошибка подключения к выбранной игре", response);
     }
 }

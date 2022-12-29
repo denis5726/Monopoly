@@ -1,13 +1,149 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<Pane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:id="pane"
+      maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="400.0" prefWidth="600.0"
+      styleClass="background" fx:controller="monopoly.ux.controller.GameController">
    <children>
-      <ImageView fitHeight="540.0" fitWidth="599.0" layoutX="568.0" layoutY="58.0" pickOnBounds="true" preserveRatio="true" styleClass="gameImageView" />
+      <HBox fx:id="hBox" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1280.0">
+         <children>
+            <VBox fx:id="leftVBox" prefHeight="720.0" prefWidth="320.0">
+               <children>
+                  <Button fx:id="back" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#backButtonAction" styleClass="back-button">
+                     <VBox.margin>
+                        <Insets left="10.0" top="10.0" />
+                     </VBox.margin>
+                  </Button>
+                  <VBox fx:id="rightPanelVBox" alignment="TOP_CENTER" prefHeight="652.0" prefWidth="320.0">
+                     <children>
+                        <Label text="Игроки">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </Label>
+                        <ScrollPane fx:id="playersPane" prefHeight="216.0" prefWidth="320.0" hbarPolicy="NEVER">
+                           <VBox fx:id="playersVBox" prefWidth="320"/>
+                        </ScrollPane>
+                        <Label text="Чат">
+                           <font>
+                              <Font size="30.0" />
+                           </font>
+                        </Label>
+                        <ScrollPane fx:id="chatPane" prefHeight="200.0" prefWidth="200.0">
+                           <VBox fx:id="chatVBox"/>
+                        </ScrollPane>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="chatMessageField" prefHeight="0.0" prefWidth="238.0" styleClass="chat">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin>
+                              </TextArea>
+                              <Button fx:id="sendMessageButton" mnemonicParsing="false" onAction="#sendMessageAction" prefHeight="136.0" prefWidth="66.0">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </VBox.margin>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox fx:id="rightVBox" prefHeight="200.0" prefWidth="960.0">
+               <children>
+                  <GridPane fx:id="valuesGridPane" prefHeight="80.0" prefWidth="1116.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="585.8666137695312" minWidth="10.0" prefWidth="108.0000061035156" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="640.2666931152344" minWidth="10.0" prefWidth="452.6666625976563" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="320.0" minWidth="10.0" prefWidth="320.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Баланс: 1500">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="80.0" prefWidth="574.0" GridPane.columnIndex="1">
+                           <children>
+                              <Label text="Ходит Николай Тугарев">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="80.0" prefWidth="425.0" GridPane.columnIndex="2">
+                           <children>
+                              <Label text="Время 0:11">
+                                 <font>
+                                    <Font size="21.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </GridPane>
+                  <HBox fx:id="gameHBox" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <ImageView fitHeight="640.0" fitWidth="816.0" pickOnBounds="true" preserveRatio="true" styleClass="gameImageView" />
+                        <VBox fx:id="leftPanelVBox" alignment="CENTER" prefHeight="200.0" prefWidth="320.0">
+                           <children>
+                              <Label text="Недвижимость">
+                                 <font>
+                                    <Font size="30.0" />
+                                 </font>
+                              </Label>
+                              <ScrollPane fx:id="propertyPane" prefHeight="583.0" prefWidth="320.0" />
+                              <Button fx:id="beginDialButton" mnemonicParsing="false" onAction="#beginDialAction" prefHeight="60.0" prefWidth="300.0" text="Начать сделку">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="dropDiceButton" mnemonicParsing="false" onAction="#dropDiceAction" prefHeight="60.0" prefWidth="300.0" text="Бросить кубик" />
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
    </children>
    <stylesheets>
       <URL value="@../styles/main.css" />

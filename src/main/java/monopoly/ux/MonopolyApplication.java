@@ -1,35 +1,33 @@
 package monopoly.ux;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import monopoly.context.Context;
-import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.game.module.ModuleInterfaceGameImpl;
 import monopoly.log.Logger;
-import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.net.module.ModuleInterfaceNetImpl;
 import monopoly.ux.controller.SceneController;
 import monopoly.ux.controller.ControllerClassFabric;
-import monopoly.ux.module.ModuleInterfaceUI;
 import monopoly.ux.module.ModuleInterfaceUIImpl;
 import monopoly.settings.SettingsContainer;
+
+import java.net.URL;
 
 public class MonopolyApplication extends Application {
     private static Stage stage;
     private static boolean running = true;
-    private static String currentScene;
+    private static SceneController currentScene;
 
 
     @Override
     public void start(Stage stage) {
         MonopolyApplication.stage = stage;
 
-        Logger.trace(Font.loadFont(MonopolyApplication.class.
-                getResource("fonts/kabelctt.ttf").
+        Logger.trace(Font.loadFont(loadResource("fonts/kabelctt.ttf").
                 toExternalForm(), 10).getName());
 
         SettingsContainer.load();
@@ -37,6 +35,17 @@ public class MonopolyApplication extends Application {
         loadApplicationContext();
 
         stage.setTitle("Monopoly");
+        stage.setWidth(1300);
+        stage.setHeight(770);
+        stage.setMinWidth(770);
+        stage.setMinHeight(570);
+
+        ChangeListener<? super Number> resizeListener = (observableValue, oldValue, newValue) -> {
+            currentScene.onResize();
+        };
+
+        stage.widthProperty().addListener(resizeListener);
+        stage.heightProperty().addListener(resizeListener);
 
         setScene("mainMenu", new SceneContext());
 
@@ -52,26 +61,19 @@ public class MonopolyApplication extends Application {
     }
 
     public static void setScene(String nameScene, SceneContext context) {
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                MonopolyApplication.class.getResource("views/" + nameScene + ".fxml"));
+        if (currentScene != null) currentScene.onChangeScene();
 
-        try {
-            if (currentScene != null) ((SceneController) Context.get(
-                    ControllerClassFabric.getSceneController(currentScene))).onChangeScene();
+        SceneController currentSceneInitializer = ControllerClassFabric.getSceneController(nameScene);
 
-            currentScene = nameScene;
+        Scene scene = currentSceneInitializer.getScene();
 
-            Scene scene = new Scene(fxmlLoader.load());
-            stage.setScene(scene);
-            SceneController sceneController = (SceneController) Context.get(
-                    ControllerClassFabric.getSceneController(nameScene));
-            context.addProperty("root", scene.getRoot());
-            if (sceneController != null) sceneController.onCreateScene(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.error("Scene with name " + nameScene + " is not found");
-        }
+        stage.setScene(scene);
 
+        currentScene = (SceneController) Context.get(nameScene);
+
+        currentScene.onCreateScene(context);
+
+        if (currentScene == null) Logger.error("Scene with name " + nameScene + " is not found");
     }
 
     public static boolean isRunning() {
@@ -82,9 +84,14 @@ public class MonopolyApplication extends Application {
         launch();
     }
 
+    public static URL loadResource(String path) {
+        return MonopolyApplication.class.getResource(path);
+    }
+
     private static void loadApplicationContext() {
-        Context.put(ModuleInterfaceUI.class, new ModuleInterfaceUIImpl());
-        Context.put(ModuleInterfaceGame.class, new ModuleInterfaceGameImpl());
-        Context.put(ModuleInterfaceNet.class, new ModuleInterfaceNetImpl());
+        Context.put("mainWindow", stage);
+        Context.put("moduleInterfaceUI", new ModuleInterfaceUIImpl());
+        Context.put("moduleInterfaceGame", new ModuleInterfaceGameImpl());
+        Context.put("moduleInterfaceNet", new ModuleInterfaceNetImpl());
     }
 }

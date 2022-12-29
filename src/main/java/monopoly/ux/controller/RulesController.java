@@ -9,13 +9,6 @@ import monopoly.ux.SceneContext;
 public class RulesController extends SceneController {
     @FXML
     public Button back;
-
-    @Override
-    public void onCreateScene(SceneContext sceneContext) {
-
-
-    }
-
     public void backAction(ActionEvent actionEvent) {
         MonopolyApplication.setScene("mainMenu", new SceneContext());
     }
