@@ -93,11 +93,6 @@ public class CreateGameController extends SceneController {
         hBox.setPrefSize(w, h);
     }
 
-    @Override
-    public void onCreateScene(SceneContext sceneContext) {
-        onResize();
-    }
-
     public void nextAction(ActionEvent actionEvent) {
         boolean nonEmptyTitle = !gameTitle.getText().isEmpty();
         boolean nonEmptyPassword = true;

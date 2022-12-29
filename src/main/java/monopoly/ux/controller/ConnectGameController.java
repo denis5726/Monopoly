@@ -50,7 +50,8 @@ public class ConnectGameController extends SceneController {
         Logger.trace(gameList.toString());
         addGames(gameList);
 
-        onResize();
+
+        super.onCreateScene(sceneContext);
     }
 
     @Override

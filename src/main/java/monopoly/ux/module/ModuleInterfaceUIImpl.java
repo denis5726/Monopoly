@@ -1,9 +1,6 @@
 package monopoly.ux.module;
 
-import monopoly.ux.model.Game;
-import monopoly.ux.model.GamePlayer;
-import monopoly.ux.model.GameQuestion;
-import monopoly.ux.model.Player;
+import monopoly.ux.model.*;
 
 import java.util.List;
 
@@ -20,6 +17,21 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
 
     @Override
     public void removePlayer(Player player) {
+
+    }
+
+    @Override
+    public void addGame(CreatedGame createdGame) {
+
+    }
+
+    @Override
+    public void setGames(List<CreatedGame> gameList) {
+
+    }
+
+    @Override
+    public void removeGame(CreatedGame createdGame) {
 
     }
 
@@ -44,9 +56,9 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
-    public String showDialog(GameQuestion question, int waitingTime) {
+    public void showDialog(GameQuestion question, int waitingTime) {
 
-        return null;
+
     }
 
     @Override
@@ -56,11 +68,6 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
 
     @Override
     public void startGame(Game game) {
-
-    }
-
-    @Override
-    public void addEventChat(String text) {
 
     }
 

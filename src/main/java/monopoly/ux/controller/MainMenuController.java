@@ -47,11 +47,6 @@ public class MainMenuController extends SceneController {
     public Button quit;
 
     @Override
-    public void onCreateScene(SceneContext sceneContext) {
-        onResize();
-    }
-
-    @Override
     public void onResize() {
         Stage window = (Stage) Context.get("mainWindow");
 

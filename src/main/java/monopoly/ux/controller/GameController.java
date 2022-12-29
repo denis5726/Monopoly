@@ -66,11 +66,6 @@ public class GameController extends SceneController {
     }
 
     @Override
-    public void onChangeScene() {
-        super.onChangeScene();
-    }
-
-    @Override
     public void onCreateScene(SceneContext sceneContext) {
         createdGame = (CreatedGame) sceneContext.getProperty("game");
         playerList = (List<GamePlayer>) sceneContext.getProperty("players");
@@ -80,6 +75,8 @@ public class GameController extends SceneController {
             playerName.getStyleClass().add("player");
             playersVBox.getChildren().add(playerName);
         }
+
+        super.onCreateScene(sceneContext);
     }
 
     public void backButtonAction(ActionEvent actionEvent) {

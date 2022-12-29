@@ -17,11 +17,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.log.Logger;
-import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.model.CreatedGame;
-import monopoly.ux.model.GamePlayer;
+import monopoly.ux.model.Player;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,8 +37,6 @@ public class WaitingPlayersController extends SceneController {
     public HBox hBox;
     @FXML
     public VBox vBox;
-    private CreatedGame createdGame;
-    private boolean isRunning = true;
 
     @Override
     public void onResize() {
@@ -53,40 +49,7 @@ public class WaitingPlayersController extends SceneController {
         hBox.setPrefSize(w, h);
     }
 
-    private void checkingPlayersService() {
-        Service<List<GamePlayer>> updateHeader = new Service<>() {
-            @Override
-            protected Task<List<GamePlayer>> createTask() {
-                return new Task<>() {
-                    @Override
-                    protected List<GamePlayer> call() throws Exception {
-                        Thread.sleep(1000);
-
-                        ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(
-                                "moduleInterfaceNet");
-
-                        return moduleInterfaceNet.getPlayersList(createdGame);
-                    }
-                };
-            }
-        };
-
-        updateHeader.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (event) -> {
-            Logger.trace(updateHeader.getValue().toString());
-            setPlayersList(updateHeader.getValue());
-            if (updateHeader.getValue().size() == createdGame.getPlayersNum()) {
-                SceneContext sceneContext = new SceneContext();
-                sceneContext.addProperty("game", createdGame);
-                sceneContext.addProperty("players", updateHeader.getValue());
-                MonopolyApplication.setScene("game", sceneContext);
-            }
-            if (isRunning) updateHeader.restart();
-        });
-
-        updateHeader.start();
-    }
-
-    private void setPlayersList(List<GamePlayer> playerList) {
+    private void setPlayersList(List<Player> playerList) {
         ObservableList<Node> children = this.playersList.getChildren();
         for (int i = 0; i < playerList.size(); ++i) {
             ((Label)((HBox) children.get(i)).getChildren().get(0)).setText(playerList.get(i).getName());
@@ -121,7 +84,7 @@ public class WaitingPlayersController extends SceneController {
 
         updateHeader.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, (event) -> {
             header.setText(updateHeader.getValue());
-            if (isRunning) updateHeader.restart();
+            if (isEnabled()) updateHeader.restart();
         });
 
         updateHeader.start();
@@ -129,24 +92,12 @@ public class WaitingPlayersController extends SceneController {
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
-        createdGame = (CreatedGame) sceneContext.getProperty("game");
-
-        isRunning = true;
-
         Logger.trace(this.toString());
 
-        onResize();
-
         updatingHeaderService();
-        checkingPlayersService();
+
+        super.onCreateScene(sceneContext);
     }
-
-    @Override
-    public void onChangeScene() {
-        isRunning = false;
-    }
-
-
     public void backAction(ActionEvent actionEvent) {
         MonopolyApplication.setScene("mainMenu", new SceneContext());
     }
