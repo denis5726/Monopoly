@@ -89,7 +89,7 @@ public class DialogFabric {
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
         if (result.isPresent()) {
-            ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get(ModuleInterfaceNet.class);
+            ModuleInterfaceNet moduleInterfaceNet = (ModuleInterfaceNet) Context.get("moduleInterfaceNet");
             String response = moduleInterfaceNet.login(username.getText(), password.getText());
             if (response.equals("Success")) return true;
             else {
@@ -98,5 +98,19 @@ public class DialogFabric {
             }
         }
         else return false;
+    }
+
+    public static boolean showQuitGame() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Подтверждение выхода");
+        dialog.setHeaderText("Вы уверены, что хотите выйти из игры?");
+
+        ButtonType okButtonType = new ButtonType("Да", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
+
+        dialog.showAndWait();
+
+        return dialog.getResult().getText().equals("Да");
     }
 }

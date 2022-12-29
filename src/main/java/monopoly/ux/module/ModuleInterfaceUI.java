@@ -12,19 +12,27 @@ public interface ModuleInterfaceUI {
 
     void removePlayer(Player player);
 
+    void addGame(CreatedGame createdGame);
+
+    void setGames(List<CreatedGame> gameList);
+
+    void removeGame(CreatedGame createdGame);
+
     void setPlayerMoney(GamePlayer gamePlayer, int money);
 
     void removePlayerTo(GamePlayer gamePlayer, int position);
 
     void setHomeNum(int position, int num);
 
-    void addLog(String player, String text);
-
-    String showDialog(GameQuestion question, int waitingTime);
+    void showDialog(GameQuestion question, int waitingTime);
 
     void setStepCountdown(int stepCountdown);
 
     void showDices(int value_1, int value_2);
+
+    void addLog(String player, String text);
+
+    void addMessageChat(String text);
 
     void startGame(Game game);
 }

@@ -1,3 +1,9 @@
+#hBox {
+    -fx-start-margin: 10px;
+    -fx-end-margin: 10px;
+    -fx-padding: 10px;
+}
+
 .game-scroll {
     -fx-background-color: rgb(100, 250, 100);
     -fx-pref-width: 500px;

@@ -15,27 +15,27 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.CreateGameController">
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.CreateGameController">
    <stylesheets>
       <URL value="@../styles/main.css" />
       <URL value="@../styles/createGame.css" />
    </stylesheets>
    <children>
-      <HBox alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1280.0">
+      <HBox fx:id="hBox" alignment="TOP_CENTER" prefHeight="720.0" prefWidth="1280.0">
          <children>
             <Button fx:id="back" mnemonicParsing="false" onAction="#backAction" styleClass="back-button" text="Button">
                <HBox.margin>
                   <Insets right="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="720.0" prefWidth="938.0">
+            <VBox fx:id="vBox" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="720.0" prefWidth="938.0">
                <children>
-                  <Separator orientation="VERTICAL" prefHeight="117.0" prefWidth="212.0" />
+                  <Separator fx:id="separator1" orientation="VERTICAL" prefHeight="117.0" prefWidth="212.0" />
                   <Label styleClass="header" text="Создать игру" />
-                  <Separator orientation="VERTICAL" prefHeight="101.0" prefWidth="138.0" />
+                  <Separator fx:id="separator2" orientation="VERTICAL" prefHeight="101.0" prefWidth="138.0" />
                   <TextField fx:id="gameTitle" prefHeight="70.0" prefWidth="938.0" promptText="Название игры" />
-                  <Separator orientation="VERTICAL" prefHeight="128.0" prefWidth="500.0" />
-                  <GridPane>
+                  <Separator fx:id="separator3" orientation="VERTICAL" prefHeight="128.0" prefWidth="500.0" />
+                  <GridPane fx:id="gridPane">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="462.60003662109375" minWidth="10.0" prefWidth="200.20005798339844" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="812.4666290283203" minWidth="10.0" prefWidth="737.7999420166016" />
@@ -47,10 +47,10 @@
                         <RowConstraints maxHeight="295.0666564941406" minHeight="10.0" prefHeight="151.80003051757814" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
+                        <HBox fx:id="passwordHBox" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
                            <children>
                               <Label prefHeight="70.0" prefWidth="286.0" styleClass="game-parameter" text=" Вход по паролю" />
-                              <Separator prefHeight="26.0" prefWidth="198.0" />
+                              <Separator fx:id="passwordSeparator" prefHeight="26.0" prefWidth="198.0" />
                               <PasswordField fx:id="passwordField" prefHeight="51.0" prefWidth="485.0" promptText="Пароль" />
                            </children>
                         </HBox>
@@ -60,7 +60,7 @@
                         <Label styleClass="game-parameter" text=" Количество времени на принятие решения игроком" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="stepTime" onKeyTyped="#stepTimeChanged" promptText="10" text="10" GridPane.rowIndex="3" />
                         <Label styleClass="game-parameter" text=" Время хода для выполнения действия" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <Pane prefHeight="200.0" prefWidth="200.0">
+                        <Pane fx:id="checkPasswordPane" prefHeight="200.0" prefWidth="200.0">
                            <children>
                               <CheckBox fx:id="checkPassword" layoutX="4.0" layoutY="32.0" lineSpacing="1.0" mnemonicParsing="false" onAction="#checkPasswordAction" prefHeight="0.0" prefWidth="0.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0" selected="true" textFill="WHITE">
                                  <opaqueInsets>
@@ -76,7 +76,7 @@
             </VBox>
             <Button fx:id="next" mnemonicParsing="false" onAction="#nextAction" styleClass="next-button" text="Button">
                <HBox.margin>
-                  <Insets left="10.0" top="10.0" />
+                  <Insets right="10.0" top="10.0" />
                </HBox.margin>
             </Button>
          </children>

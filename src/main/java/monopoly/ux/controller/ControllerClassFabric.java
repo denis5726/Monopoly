@@ -1,14 +1,15 @@
 package monopoly.ux.controller;
 
 public class ControllerClassFabric {
-    public static Class<?> getSceneController(String nameScene) {
+    public static SceneController getSceneController(String nameScene) {
         return switch (nameScene) {
-            case "mainMenu" -> MainMenuController.class;
-            case "createGame" -> CreateGameController.class;
-            case "connectGame" -> ConnectGameController.class;
-            case "settings" -> SettingsController.class;
-            case "rules" -> RulesController.class;
-            case "waitingPlayers" -> WaitingPlayersController.class;
+            case "mainMenu" -> new MainMenuController();
+            case "createGame" -> new CreateGameController();
+            case "connectGame" -> new ConnectGameController();
+            case "settings" -> new SettingsController();
+            case "rules" -> new RulesController();
+            case "waitingPlayers" -> new WaitingPlayersController();
+            case "game" -> new GameController();
             default -> throw new RuntimeException("Controller with name scene " + nameScene + " is not found");
         };
     }
