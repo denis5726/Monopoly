@@ -9,11 +9,9 @@ import monopoly.log.Logger;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
 import monopoly.context.Context;
-import monopoly.ux.model.*;
 import monopoly.ux.module.event.*;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public abstract class SceneController {
@@ -24,6 +22,86 @@ public abstract class SceneController {
 
     public SceneController() {
         Context.put(getClassName(), this);
+        
+        UIEvent.setHandler(UIEventType.ADD_GAME, this::onAddGame);
+        UIEvent.setHandler(UIEventType.ADD_LOG, this::onAddLog);
+        UIEvent.setHandler(UIEventType.ADD_MESSAGE_CHAT, this::onAddMessageChat);
+        UIEvent.setHandler(UIEventType.ADD_PLAYER, this::onAddPlayer);
+        UIEvent.setHandler(UIEventType.REMOVE_GAME, this::onRemoveGame);
+        UIEvent.setHandler(UIEventType.REMOVE_PLAYER, this::onRemovePlayer);
+        UIEvent.setHandler(UIEventType.REMOVE_PLAYER_TO, this::onRemovePlayerTo);
+        UIEvent.setHandler(UIEventType.SET_NEXT_STEP, this::onSetNextStep);
+        UIEvent.setHandler(UIEventType.SET_GAMES, this::onSetGames);
+        UIEvent.setHandler(UIEventType.SET_HOME_NUM, this::onSetHomeNum);
+        UIEvent.setHandler(UIEventType.SET_PLAYER_MONEY, this::onSetPlayerMoney);
+        UIEvent.setHandler(UIEventType.SET_PLAYERS, this::onSetPlayers);
+        UIEvent.setHandler(UIEventType.SET_STEP_COUNTDOWN, this::onSetStepCountdown);
+        UIEvent.setHandler(UIEventType.SHOW_DIALOG, this::onShowDialog);
+        UIEvent.setHandler(UIEventType.SHOW_DICE, this::onShowDices);
+        UIEvent.setHandler(UIEventType.START_GAME, this::onStartGame);
+    }
+
+    protected void onSetNextStep(UIEvent uiEvent) {
+
+    }
+
+    protected void onStartGame(UIEvent uiEvent) {
+
+    }
+
+    protected void onShowDices(UIEvent uiEvent) {
+        
+    }
+
+    protected void onShowDialog(UIEvent uiEvent) {
+        
+    }
+
+    protected void onSetStepCountdown(UIEvent uiEvent) {
+        
+    }
+
+    protected void onSetPlayers(UIEvent uiEvent) {
+        
+    }
+
+    protected void onSetPlayerMoney(UIEvent uiEvent) {
+        
+    }
+
+    protected void onSetHomeNum(UIEvent uiEvent) {
+        
+    }
+
+    protected void onSetGames(UIEvent uiEvent) {
+    }
+
+    protected void onRemovePlayerTo(UIEvent uiEvent) {
+
+    }
+
+    protected void onRemovePlayer(UIEvent uiEvent) {
+
+    }
+
+    protected void onRemoveGame(UIEvent uiEvent) {
+
+    }
+
+    protected void onAddPlayer(UIEvent uiEvent) {
+
+    }
+
+    protected void onAddMessageChat(UIEvent uiEvent) {
+
+    }
+
+    protected void onAddLog(UIEvent uiEvent) {
+
+    }
+
+    protected void onAddGame(UIEvent uiEvent) {
+        
     }
 
     public static void pollEvent(UIEvent uiEvent) {
@@ -70,66 +148,6 @@ public abstract class SceneController {
         return enabled;
     }
 
-    protected void onAddPlayer(Player player) {
-
-    }
-
-    protected void onSetPlayers(List<Player> players) {
-
-    }
-
-    protected void onRemovePlayer(Player player) {
-
-    }
-
-    protected void onAddGame(CreatedGame createdGame) {
-
-    }
-
-    protected void onSetGames(List<CreatedGame> gameList) {
-
-    }
-
-    protected void onRemoveGame(CreatedGame createdGame) {
-
-    }
-
-    protected void onSetPlayerMoney(GamePlayer gamePlayer, int money) {
-
-    }
-
-    protected void onRemovePlayerTo(GamePlayer gamePlayer, int position) {
-
-    }
-
-    protected void onSetHomeNum(int position, int num) {
-
-    }
-
-    protected void onShowDialog(GameQuestion question, int waitingTime) {
-
-    }
-
-    protected void onSetStepCountdown(int stepCountdown) {
-
-    }
-
-    protected void onShowDices(int value_1, int value_2) {
-
-    }
-
-    protected void onAddLog(String player, String text) {
-
-    }
-
-    protected void onAddMessageChat(String text) {
-
-    }
-
-    protected void onStartGame(Game game) {
-
-    }
-
     private static class EventObserver {
         private final Service<UIEvent> eventObserver;
         public EventObserver() {
@@ -169,43 +187,7 @@ public abstract class SceneController {
                 eventQueue.remove();
 
                 UIEvent uiEvent = eventObserver.getValue();
-
-                if (uiEvent instanceof AddPlayerEvent)
-                    controller.onAddPlayer(((AddPlayerEvent) uiEvent).getPlayer());
-                else if (uiEvent instanceof SetPlayersEvent)
-                    controller.onSetPlayers(((SetPlayersEvent) uiEvent).getPlayer());
-                else if (uiEvent instanceof RemovePlayerEvent)
-                    controller.onRemovePlayer(((RemovePlayerEvent) uiEvent).getPlayer());
-                else if (uiEvent instanceof AddGameEvent)
-                    controller.onAddGame(((AddGameEvent) uiEvent).getCreatedGame());
-                else if (uiEvent instanceof SetGamesEvent)
-                    controller.onSetGames(((SetGamesEvent) uiEvent).getGames());
-                else if (uiEvent instanceof RemoveGameEvent)
-                    controller.onRemoveGame(((RemoveGameEvent) uiEvent).getCreatedGame());
-                else if (uiEvent instanceof SetPlayerMoneyEvent)
-                    controller.onSetPlayerMoney(((SetPlayerMoneyEvent) uiEvent).getPlayer(),
-                            ((SetPlayerMoneyEvent) uiEvent).getMoney());
-                else if (uiEvent instanceof RemovePlayerToEvent)
-                    controller.onRemovePlayerTo(((RemovePlayerToEvent) uiEvent).getPlayer(),
-                            ((RemovePlayerToEvent) uiEvent).getPosition());
-                else if (uiEvent instanceof SetHomeNumEvent)
-                    controller.onSetHomeNum(((SetHomeNumEvent) uiEvent).getPosition(),
-                            ((SetHomeNumEvent) uiEvent).getNum());
-                else if (uiEvent instanceof ShowDialogEvent)
-                    controller.onShowDialog(((ShowDialogEvent) uiEvent).getQuestion(),
-                            ((ShowDialogEvent) uiEvent).getWaitingTime());
-                else if (uiEvent instanceof SetStepCountdownEvent)
-                    controller.onSetStepCountdown(((SetStepCountdownEvent) uiEvent).getCountdown());
-                else if (uiEvent instanceof ShowDiceEvent)
-                    controller.onShowDices(((ShowDiceEvent) uiEvent).getValue_1(),
-                            ((ShowDiceEvent) uiEvent).getValue_2());
-                else if (uiEvent instanceof AddLogEvent)
-                    controller.onAddLog(((AddLogEvent) uiEvent).getPlayer(),
-                            ((AddLogEvent) uiEvent).getText());
-                else if (uiEvent instanceof AddMessageChatEvent)
-                    controller.onAddMessageChat(((AddMessageChatEvent) uiEvent).getText());
-                else if (uiEvent instanceof StartGameEvent)
-                    controller.onStartGame(((StartGameEvent) uiEvent).getGame());
+                uiEvent.getHandler().handle(uiEvent);
 
                 eventObserver.restart();
             });

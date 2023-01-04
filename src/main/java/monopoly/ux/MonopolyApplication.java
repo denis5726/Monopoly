@@ -41,8 +41,8 @@ public class MonopolyApplication extends Application {
         loadApplicationContext();
 
         stage.setTitle("Monopoly");
-        stage.setWidth(1300);
-        stage.setHeight(770);
+        stage.setWidth(1280);
+        stage.setHeight(720);
         stage.setMinWidth(770);
         stage.setMinHeight(570);
 
@@ -143,6 +143,25 @@ public class MonopolyApplication extends Application {
                     GamePlayer player = new GamePlayer();
                     player.setName(playersInGame.get(indexPlayer));
                     moduleInterfaceUI.setPlayerMoney(player, (int) (Math.random() * 100000));
+                }
+                case "g" -> {
+                    if (playersInGame.size() == 0) return;
+                    int indexPlayer = (int) (Math.random() * playersInGame.size());
+                    GamePlayer player = new GamePlayer();
+                    player.setName(playersInGame.get(indexPlayer));
+                    int pos = (int) (Math.random() * 40);
+                    Logger.trace("Remove " + player.getName() + " to " + pos);
+                    moduleInterfaceUI.removePlayerTo(player, pos);
+                }
+                case "t" -> {
+                    int time = (int) (Math.random() * 107);
+                    moduleInterfaceUI.setStepCountdown(time);
+                }
+                case "h" -> {
+                    int position = (int) (Math.random() * 40);
+                    int amount = (int)(Math.random() * 6);
+                    Logger.trace("Set " + position + " " + amount + " home level");
+                    moduleInterfaceUI.setHomeNum(position, amount);
                 }
             }
         });

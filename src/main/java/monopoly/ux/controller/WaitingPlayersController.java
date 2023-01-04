@@ -18,8 +18,8 @@ import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.model.Game;
 import monopoly.ux.model.Player;
+import monopoly.ux.module.event.UIEvent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,21 +52,22 @@ public class WaitingPlayersController extends SceneController {
     }
 
     @Override
-    public void onAddPlayer(Player player) {
-        players.add(player);
+    public void onAddPlayer(UIEvent uiEvent) {
+
+        players.add(uiEvent.getPlayer());
         setPlayersList();
     }
 
     @Override
-    public void onRemovePlayer(Player player) {
-        players.remove(player);
+    public void onRemovePlayer(UIEvent uiEvent) {
+        players.remove(uiEvent.getPlayer());
         setPlayersList();
     }
 
     @Override
-    protected void onStartGame(Game game) {
+    protected void onStartGame(UIEvent uiEvent) {
         SceneContext sceneContext = new SceneContext();
-        sceneContext.addProperty("game", game);
+        sceneContext.addProperty("game", uiEvent.getGame());
         MonopolyApplication.setScene("game", sceneContext);
     }
 

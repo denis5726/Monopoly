@@ -14,6 +14,7 @@ import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
 import monopoly.ux.model.CreatedGame;
+import monopoly.ux.module.event.UIEvent;
 import monopoly.ux.window.AlertWindowFabric;
 import monopoly.ux.window.DialogFabric;
 
@@ -65,20 +66,20 @@ public class ConnectGameController extends SceneController {
     }
 
     @Override
-    protected void onAddGame(CreatedGame createdGame) {
-        games.add(createdGame);
+    protected void onAddGame(UIEvent uiEvent) {
+        games.add(uiEvent.getCreatedGame());
         addGames();
     }
 
     @Override
-    protected void onSetGames(List<CreatedGame> gameList) {
-        games = gameList;
+    protected void onSetGames(UIEvent uiEvent) {
+        games = uiEvent.getCreatedGames();
         addGames();
     }
 
     @Override
-    protected void onRemoveGame(CreatedGame createdGame) {
-        games.remove(createdGame);
+    protected void onRemoveGame(UIEvent uiEvent) {
+        games.remove(uiEvent.getCreatedGame());
         addGames();
     }
 

@@ -2,21 +2,24 @@ package monopoly.ux.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.game.model.PlayerInfo;
 import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
+import monopoly.ux.controller.game.Cell;
+import monopoly.ux.controller.game.UIPlayer;
 import monopoly.ux.model.Game;
 import monopoly.ux.model.GamePlayer;
-import monopoly.ux.model.GameQuestion;
+import monopoly.ux.module.event.UIEvent;
 import monopoly.ux.window.DialogFabric;
 import monopoly.ux.window.PlayerInfoWindow;
 
@@ -62,20 +65,84 @@ public class GameController extends SceneController {
     public AnchorPane gamePane;
     @FXML
     public Label stepTime;
+    @FXML
+    public ImageView gameImage;
+    @FXML
+    public Label balance;
+    @FXML
+    public Label currentStepPlayer;
     private PlayerInfoWindow playerInfoWindow;
     private Game game;
-    private List<GamePlayer> playerList;
+    private List<UIPlayer> playerList;
+    private Cell[] cells;
 
     @Override
     public void onResize() {
-        super.onResize();
+        Stage stage = (Stage) Context.get("mainWindow");
+        double w = stage.getWidth();
+        double h = stage.getHeight();
+
+        pane.setPrefSize(w, h);
+        hBox.setPrefSize(w, h);
+
+        rightVBox.setPrefSize(w * 0.75, h);
+        leftVBox.setPrefSize(w * 0.25, h);
+
+        leftPanelVBox.setPrefSize(0.234 * w, 0.77 * h);
+
+        valuesGridPane.setPrefSize(0.75 * w, 0.11 * h);
+        gameHBox.setPrefSize(0.75 * w, 0.888 * h);
+
+        playersVBox.setPrefSize(0.234 * w, 0.29 * h);
+        chatMessageField.setPrefSize(0.721 * leftPanelVBox.getPrefWidth(), 0.115 * h);
+
+        double gameImageSize = Math.min(0.47 * w, 0.888 * h);
+        gamePane.setPrefSize(gameImageSize, gameImageSize);
+        gamePane.setMaxSize(gameImageSize, gameImageSize);
+        rightPanelVBox.setPrefSize(0.25 * w, 0.888 * h);
+
+        gameImage.setFitWidth(gameImageSize);
+        gameImage.setFitHeight(gameImageSize);
+
+        propertyPane.setPrefSize(0.25 * w, 0.58 * h);
+
+        for (int i = 0; i < cells.length; ++i) {
+            cells[i].onResize(i, gameImage.getFitWidth());
+        }
+    }
+
+    private Color getColor(int index) {
+        return switch (index) {
+            case 0 -> Color.RED;
+            case 1 -> Color.BLUE;
+            case 2 -> Color.YELLOW;
+            case 3 -> Color.GREEN;
+            default -> null;
+        };
     }
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
         game = (Game) sceneContext.getProperty("game");
-        playerList = game.getPlayers();
-        List<Circle> playerCirles = new ArrayList<>();
+
+        playerList = new ArrayList<>();
+
+        for (int i = 0; i < game.getPlayers().size(); i++) {
+            UIPlayer UIPlayer = new UIPlayer();
+            UIPlayer.setName(game.getPlayers().get(i).getName());
+            UIPlayer.setBalance(1500);
+            Circle circle = new Circle();
+            circle.setRadius(10);
+            circle.setFill(getColor(i));
+            UIPlayer.setCircle(circle);
+            playerList.add(UIPlayer);
+        }
+
+        cells = new Cell[40];
+
+        for (int i = 0; i < cells.length; i++) {
+            cells[i] = new Cell(gamePane);
+        }
 
         for (int i = 0; i < playerList.size(); i++) {
             getPlayerLabel(i, 0).setText(playerList.get(i).getName());
@@ -83,21 +150,15 @@ public class GameController extends SceneController {
             GridPane gridPane = (GridPane) playersVBox.getChildren().get(i);
             gridPane.setOnContextMenuRequested((event) -> {
                 String playerName = ((Label) gridPane.getChildren().get(0)).getText();
-                List<GamePlayer> players = playerList.stream()
+                List<UIPlayer> players = playerList.stream()
                         .filter((obj) -> obj.getName().equals(playerName))
                         .toList();
-                showPlayerInfo(players.get(0), gridPane);
+                GamePlayer gamePlayer = new GamePlayer();
+                gamePlayer.setName(players.get(0).getName());
+                showPlayerInfo(gamePlayer);
             });
-            Circle player = new Circle();
-            player.setRadius(10);
-            player.setFill(new Color(Math.random(), Math.random(), Math.random(), 1));
-            player.setLayoutX(Math.random() * gamePane.getPrefWidth());
-            player.setLayoutY(Math.random() * gamePane.getPrefHeight());
-            playerList.get(i).setCircle(player);
-            playerCirles.add(player);
+            ((Circle) gridPane.getChildren().get(2)).setFill(getColor(i));
         }
-
-        gamePane.getChildren().addAll(playerCirles);
 
         for (int i = playerList.size(); i < playersVBox.getChildren().size(); ++i) {
             playersVBox.getChildren().get(i).setVisible(false);
@@ -106,7 +167,7 @@ public class GameController extends SceneController {
         super.onCreateScene(sceneContext);
     }
 
-    private void showPlayerInfo(GamePlayer gamePlayer, Node parentNode) {
+    private void showPlayerInfo(GamePlayer gamePlayer) {
         if (playerInfoWindow != null) playerInfoWindow.hide();
 
         ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
@@ -122,44 +183,57 @@ public class GameController extends SceneController {
     }
 
     @Override
-    protected void onSetPlayerMoney(GamePlayer gamePlayer, int money) {
-        int index = playerList.indexOf(gamePlayer);
-        getPlayerLabel(index, 1).setText(money + "$");
+    protected void onSetPlayerMoney(UIEvent uiEvent) {
+        UIPlayer UIPlayer = new UIPlayer();
+        UIPlayer.setName(uiEvent.getGamePlayer().getName());
+        int index = playerList.indexOf(UIPlayer);
+        UIPlayer original = playerList.get(index);
+        if (original.isCurrent()) balance.setText("Баланс: " + uiEvent.getAmount());
+        getPlayerLabel(index, 1).setText(uiEvent.getAmount() + "$");
     }
 
     @Override
-    protected void onRemovePlayerTo(GamePlayer gamePlayer, int position) {
+    protected void onRemovePlayerTo(UIEvent uiEvent) {
+        UIPlayer UIPlayer = playerList.stream()
+                .filter((obj) -> obj.getName().equals(
+                        uiEvent.getGamePlayer().getName())).toList().get(0);
+        for (Cell cell : cells) cell.removePlayer(UIPlayer);
+        cells[uiEvent.getPosition()].addPlayer(UIPlayer);
+    }
+
+    @Override
+    protected void onSetHomeNum(UIEvent uiEvent) {
+        cells[uiEvent.getPosition()].setHomeNum(uiEvent.getAmount());
+    }
+
+    @Override
+    protected void onShowDialog(UIEvent uiEvent) {
 
     }
 
     @Override
-    protected void onSetHomeNum(int position, int num) {
+    protected void onSetNextStep(UIEvent uiEvent) {
+        currentStepPlayer.setText("Ходит " + uiEvent.getGamePlayer());
+    }
+
+    @Override
+    protected void onSetStepCountdown(UIEvent uiEvent) {
+        stepTime.setText("Время: " + (uiEvent.getTime() / 60) + ":" + (uiEvent.getTime() % 60));
+    }
+
+    @Override
+    protected void onShowDices(UIEvent uiEvent) {
 
     }
 
     @Override
-    protected void onShowDialog(GameQuestion question, int waitingTime) {
-
+    protected void onAddLog(UIEvent uiEvent) {
+        addChatLog(uiEvent.getActor() + " " + uiEvent.getMessage());
     }
 
     @Override
-    protected void onSetStepCountdown(int stepCountdown) {
-        stepTime.setText("Время: " + (stepCountdown / 60) + ":" + (stepCountdown % 60));
-    }
-
-    @Override
-    protected void onShowDices(int value_1, int value_2) {
-
-    }
-
-    @Override
-    protected void onAddLog(String player, String text) {
-        addChatLog(player + " " + text);
-    }
-
-    @Override
-    protected void onAddMessageChat(String text) {
-        addChatMessage(text);
+    protected void onAddMessageChat(UIEvent uiEvent) {
+        addChatMessage(uiEvent.getMessage());
     }
 
     private void addChatMessage(String text) {

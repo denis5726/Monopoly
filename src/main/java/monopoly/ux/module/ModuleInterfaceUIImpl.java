@@ -2,96 +2,109 @@ package monopoly.ux.module;
 
 import monopoly.ux.controller.SceneController;
 import monopoly.ux.model.*;
-import monopoly.ux.module.event.*;
+import monopoly.ux.module.event.UIEvent;
+import monopoly.ux.module.event.UIEventType;
 
 import java.util.List;
 
 public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     @Override
     public void addPlayer(Player player) {
-        AddPlayerEvent event = new AddPlayerEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.ADD_PLAYER);
         event.setPlayer(player);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void setPlayers(List<Player> players) {
-        SetPlayersEvent event = new SetPlayersEvent();
-        event.setPlayer(players);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_PLAYERS);
+        event.setPlayers(players);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void removePlayer(Player player) {
-        RemovePlayerEvent event = new RemovePlayerEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.REMOVE_PLAYER);
         event.setPlayer(player);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void addGame(CreatedGame createdGame) {
-        AddGameEvent event = new AddGameEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.ADD_GAME);
         event.setCreatedGame(createdGame);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void setGames(List<CreatedGame> gameList) {
-        SetGamesEvent event = new SetGamesEvent();
-        event.setGames(gameList);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_GAMES);
+        event.setCreatedGames(gameList);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void removeGame(CreatedGame createdGame) {
-        RemoveGameEvent event = new RemoveGameEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.REMOVE_GAME);
         event.setCreatedGame(createdGame);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void setPlayerMoney(GamePlayer gamePlayer, int money) {
-        SetPlayerMoneyEvent event = new SetPlayerMoneyEvent();
-        event.setPlayer(gamePlayer);
-        event.setMoney(money);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_PLAYER_MONEY);
+        event.setGamePlayer(gamePlayer);
+        event.setAmount(money);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void removePlayerTo(GamePlayer gamePlayer, int position) {
-        RemovePlayerToEvent event = new RemovePlayerToEvent();
-        event.setPlayer(gamePlayer);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.REMOVE_PLAYER_TO);
+        event.setGamePlayer(gamePlayer);
         event.setPosition(position);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void setHomeNum(int position, int num) {
-        SetHomeNumEvent event = new SetHomeNumEvent();
-        event.setNum(num);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_HOME_NUM);
+        event.setAmount(num);
         event.setPosition(position);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void addLog(String player, String text) {
-        AddLogEvent event = new AddLogEvent();
-        event.setPlayer(player);
-        event.setText(text);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.ADD_LOG);
+        event.setActor(player);
+        event.setMessage(text);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void showDialog(GameQuestion question, int waitingTime) {
-        ShowDialogEvent event = new ShowDialogEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SHOW_DIALOG);
         event.setQuestion(question);
-        event.setWaitingTime(waitingTime);
+        event.setTime(waitingTime);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void showDices(int value_1, int value_2) {
-        ShowDiceEvent event = new ShowDiceEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SHOW_DICE);
         event.setValue_1(value_1);
         event.setValue_2(value_2);
         SceneController.pollEvent(event);
@@ -99,22 +112,33 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
 
     @Override
     public void startGame(Game game) {
-        StartGameEvent event = new StartGameEvent();
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.START_GAME);
         event.setGame(game);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void addMessageChat(String text) {
-        AddMessageChatEvent event = new AddMessageChatEvent();
-        event.setText(text);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.ADD_MESSAGE_CHAT);
+        event.setMessage(text);
+        SceneController.pollEvent(event);
+    }
+
+    @Override
+    public void setNextStep(GamePlayer gamePlayer) {
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_NEXT_STEP);
+        event.setGamePlayer(gamePlayer);
         SceneController.pollEvent(event);
     }
 
     @Override
     public void setStepCountdown(int stepCountdown) {
-        SetStepCountdownEvent event = new SetStepCountdownEvent();
-        event.setCountdown(stepCountdown);
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_STEP_COUNTDOWN);
+        event.setTime(stepCountdown);
         SceneController.pollEvent(event);
     }
 }

@@ -34,5 +34,7 @@ public interface ModuleInterfaceUI {
 
     void addMessageChat(String text);
 
+    void setNextStep(GamePlayer gamePlayer);
+
     void startGame(Game game);
 }
