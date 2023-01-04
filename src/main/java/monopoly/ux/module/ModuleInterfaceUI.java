@@ -36,5 +36,7 @@ public interface ModuleInterfaceUI {
 
     void setNextStep(GamePlayer gamePlayer);
 
+    void setProperty(String name, int amount);
+
     void startGame(Game game);
 }

@@ -18,6 +18,7 @@ public class UIEvent {
     private String message;
     private String sender;
     private String actor;
+    private String propertyName;
     private int position;
     private int amount;
     private int time;
@@ -163,5 +164,13 @@ public class UIEvent {
 
     public void setQuestion(GameQuestion question) {
         this.question = question;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 }

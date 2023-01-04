@@ -4,6 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
@@ -38,23 +39,41 @@ public class Cell extends AnchorPane {
         return homeNum;
     }
 
-    public void updateHomeNum() {
+    private void updateHomeNum() {
         if (homeNum == 5) {
-            Point2D position = getHotelPosition();
-            double size = getHomeSize();
-            Rectangle rect = new Rectangle(position.getX(), position.getY(), size, size);
-            rect.setFill(Color.RED);
-            getChildren().add(rect);
+            createHotel();
             return;
         }
         for (int i = 1; i <= homeNum; i++) {
-            Point2D position = getHomePosition(i);
-            double size = getHomeSize();
-            Rectangle rect = new Rectangle(position.getX(), position.getY(), size, size);
-            rect.setFill(Color.GREEN);
-            getChildren().add(rect);
+            createHouse(i);
         }
     }
+
+    private void createHotel() {
+        Polygon polygon = new Polygon();
+        Rectangle rect = new Rectangle();
+        polygon.setFill(Color.RED);
+        rect.setFill(Color.RED);
+        placeHouse(getHotelPosition(), rect, polygon);
+    }
+
+    private void createHouse(int index) {
+        Polygon polygon = new Polygon();
+        Rectangle rect = new Rectangle();
+        polygon.setFill(Color.GREEN);
+        rect.setFill(Color.GREEN);
+        placeHouse(getHousePosition(index), rect, polygon);
+    }
+
+    private void placeHouse(Point2D position, Rectangle rect, Polygon polygon) {
+        rect.setLayoutX(position.getX());
+        rect.setLayoutY(position.getY());
+        rect.setWidth(getHomeSize());
+        rect.setHeight(getHomeSize());
+
+        getChildren().add(rect);
+    }
+
     public void setHomeNum(int homeNum) {
         this.homeNum = homeNum;
         getChildren().clear();
@@ -62,20 +81,23 @@ public class Cell extends AnchorPane {
         updateChildrenList();
     }
 
-    private Point2D getHomePosition(int index) {
+    private Point2D getHousePosition(int index) {
         double x;
         double y;
+        double size = getHomeSize();
         if (index == 1 || index == 3) x = prefWidth / 2.0;
         else if (index == 2) x = prefWidth * 0.7;
         else x = prefWidth * 0.3;
         if (index == 2 || index == 4) y = prefHeight / 2.0;
         else if (index == 1) y = prefHeight * 0.3;
         else y = prefHeight * 0.7;
+        x -= size / 2.0;
+        y -= size / 2.0;
         return new Point2D(x, y);
     }
 
     private Point2D getHotelPosition() {
-        return new Point2D(prefWidth / 2.0, prefHeight / 2.0);
+        return new Point2D(prefWidth / 2.0 - getHomeSize() / 2.0, prefHeight / 2.0 - getHomeSize() / 2.0);
     }
     
     private double getHomeSize() {
@@ -153,5 +175,9 @@ public class Cell extends AnchorPane {
 
         prefWidth = w;
         prefHeight = h;
+
+        getChildren().clear();
+        updateHomeNum();
+        updateChildrenList();
     }
 }

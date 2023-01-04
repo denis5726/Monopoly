@@ -1,7 +1,9 @@
 package monopoly.ux.controller;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -71,6 +73,8 @@ public class GameController extends SceneController {
     public Label balance;
     @FXML
     public Label currentStepPlayer;
+    @FXML
+    public VBox propertyVBox;
     private PlayerInfoWindow playerInfoWindow;
     private Game game;
     private List<UIPlayer> playerList;
@@ -190,6 +194,61 @@ public class GameController extends SceneController {
         UIPlayer original = playerList.get(index);
         if (original.isCurrent()) balance.setText("Баланс: " + uiEvent.getAmount());
         getPlayerLabel(index, 1).setText(uiEvent.getAmount() + "$");
+    }
+
+    @Override
+    protected void onSetProperty(UIEvent uiEvent) {
+        ObservableList<Node> children = propertyVBox.getChildren();
+        for (Node child: children) {
+            GridPane childPane = (GridPane) child;
+            Label propertyName = (Label) childPane.getChildren().get(0);
+            Label propertyStatus = (Label) childPane.getChildren().get(1);
+            if (propertyName.getText().equals(uiEvent.getPropertyName())) {
+                propertyStatus.setText(getPropertyStatusName(uiEvent.getAmount()));
+                setStylePropertyByStatus(childPane, uiEvent.getAmount());
+                return;
+            }
+        }
+        GridPane pane = new GridPane();
+        setPropertyPane(pane, uiEvent.getPropertyName(), uiEvent.getAmount());
+        propertyVBox.getChildren().add(pane);
+    }
+
+    private void setStylePropertyByStatus(GridPane pane, int propertyStatus) {
+        if (propertyStatus == -1) {
+            pane.styleProperty().setValue("-fx-background-color: rgb(230, 100, 100);");
+        }
+        else pane.styleProperty().setValue("");
+    }
+
+    private String getPropertyStatusName(int propertyStatus) {
+        String propertyStatusString;
+        if (propertyStatus == -1) propertyStatusString = "Заложено";
+        else if (propertyStatus < 5) {
+            if (propertyStatus == 0) propertyStatusString = "Нет домов";
+            else if (propertyStatus == 1) propertyStatusString = "1 дом";
+            else propertyStatusString = propertyStatus + " дома";
+        }
+        else {
+            propertyStatusString = "Отель";
+        }
+        return propertyStatusString;
+    }
+
+    private void setPropertyPane(GridPane pane, String propertyName, int propertyStatus) {
+        ColumnConstraints constraints1 = new ColumnConstraints();
+        constraints1.setPrefWidth(200);
+        ColumnConstraints constraints2 = new ColumnConstraints();
+        constraints2.setPrefWidth(100);
+        pane.getStyleClass().add("property");
+        setStylePropertyByStatus(pane, propertyStatus);
+        pane.setHgap(10);
+        pane.setVgap(3);
+        pane.setPrefHeight(30);
+        pane.getColumnConstraints().addAll(constraints1, constraints2);
+        Label name = new Label(propertyName);
+        Label status = new Label(getPropertyStatusName(propertyStatus));
+        pane.addRow(0, name, status);
     }
 
     @Override

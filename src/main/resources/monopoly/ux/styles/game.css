@@ -38,3 +38,28 @@
 	-fx-border-radius: 7px;
 	-fx-background-radius: 7px;
 }
+
+#propertyVBox {
+	-fx-background-color: rgb(70, 230, 70);
+	-fx-border-color: rgb(70, 230, 70);
+	-fx-border-width: 3px;
+	-fx-start-margin: 3px;
+	-fx-end-margin: 3px;
+}
+
+.property {
+	-fx-background-color: rgb(50, 170, 50);
+	-fx-background-radius: 3px;
+}
+
+.property * {
+	-fx-font-size: 17px;
+}
+
+.property:hover {
+	-fx-background-color: rgb(100, 170, 100);
+}
+
+.property:pressed {
+	-fx-background-color: rgb(30, 150, 30);
+}

@@ -39,6 +39,11 @@ public abstract class SceneController {
         UIEvent.setHandler(UIEventType.SHOW_DIALOG, this::onShowDialog);
         UIEvent.setHandler(UIEventType.SHOW_DICE, this::onShowDices);
         UIEvent.setHandler(UIEventType.START_GAME, this::onStartGame);
+        UIEvent.setHandler(UIEventType.SET_PROPERTY, this::onSetProperty);
+    }
+
+    protected void onSetProperty(UIEvent uiEvent) {
+
     }
 
     protected void onSetNextStep(UIEvent uiEvent) {

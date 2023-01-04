@@ -3,6 +3,7 @@ package monopoly.ux;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -35,6 +36,8 @@ public class MonopolyApplication extends Application {
 
         Logger.trace(Font.loadFont(loadResource("fonts/kabelctt.ttf").
                 toExternalForm(), 10).getName());
+
+        stage.getIcons().add(new Image(loadResource("icon.png").toExternalForm()));
 
         SettingsContainer.load();
 
@@ -81,6 +84,13 @@ public class MonopolyApplication extends Application {
                 "крутите кейсы в LuckyCoban", "есть у кого 7 лаба по БД?",
                 "дом на Маяковского по чём?", "ищу девушку 11 лет",
                 "го обмен домами не наёб"
+        };
+
+        String[] propertyNames = new String[] {
+                "Mediter-Ranean Avenue", "Baltic Avenue",
+                "Oriental Avenue", "Vermont Avenue",
+                "Connecticut Avenue", "St. Charles Place",
+                "Status Avenue"
         };
 
         List<String> players = new ArrayList<>(Arrays.asList(playersNames));
@@ -162,6 +172,11 @@ public class MonopolyApplication extends Application {
                     int amount = (int)(Math.random() * 6);
                     Logger.trace("Set " + position + " " + amount + " home level");
                     moduleInterfaceUI.setHomeNum(position, amount);
+                }
+                case "p" -> {
+                    String name = propertyNames[(int) (Math.random() * propertyNames.length)];
+                    int amount = -1 + ((int)(Math.random() * 7));
+                    moduleInterfaceUI.setProperty(name, amount);
                 }
             }
         });

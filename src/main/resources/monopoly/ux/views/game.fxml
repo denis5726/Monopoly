@@ -207,7 +207,11 @@
                                     <Font size="30.0" />
                                  </font>
                               </Label>
-                              <ScrollPane fx:id="propertyPane" prefHeight="432.0" prefWidth="300.0" />
+                              <ScrollPane fx:id="propertyPane" hbarPolicy="NEVER" prefHeight="430.0" prefWidth="300.0">
+                                 <content>
+                                    <VBox fx:id="propertyVBox" prefHeight="438.0" prefWidth="300.0" spacing="3.0" />
+                                 </content>
+                              </ScrollPane>
                               <Button fx:id="beginDialButton" mnemonicParsing="false" onAction="#beginDialAction" prefHeight="60.0" prefWidth="300.0" text="Начать сделку">
                                  <VBox.margin>
                                     <Insets bottom="10.0" top="10.0" />

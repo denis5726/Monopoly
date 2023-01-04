@@ -135,6 +135,15 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
+    public void setProperty(String name, int amount) {
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_PROPERTY);
+        event.setPropertyName(name);
+        event.setAmount(amount);
+        SceneController.pollEvent(event);
+    }
+
+    @Override
     public void setStepCountdown(int stepCountdown) {
         UIEvent event = new UIEvent();
         event.setType(UIEventType.SET_STEP_COUNTDOWN);
