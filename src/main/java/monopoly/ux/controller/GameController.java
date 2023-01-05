@@ -18,6 +18,7 @@ import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
 import monopoly.ux.controller.game.Cell;
+import monopoly.ux.controller.game.Dice;
 import monopoly.ux.controller.game.UIPlayer;
 import monopoly.ux.model.Game;
 import monopoly.ux.model.GamePlayer;
@@ -75,6 +76,8 @@ public class GameController extends SceneController {
     public Label currentStepPlayer;
     @FXML
     public VBox propertyVBox;
+    private Dice dice1;
+    private Dice dice2;
     private PlayerInfoWindow playerInfoWindow;
     private Game game;
     private List<UIPlayer> playerList;
@@ -282,7 +285,10 @@ public class GameController extends SceneController {
 
     @Override
     protected void onShowDices(UIEvent uiEvent) {
-
+        if (dice1 == null) dice1 = new Dice(gamePane, 0);
+        if (dice2 == null) dice2 = new Dice(gamePane, 1);
+        dice1.startValue(uiEvent.getValue_1());
+        dice2.startValue(uiEvent.getValue_2());
     }
 
     @Override

@@ -178,6 +178,11 @@ public class MonopolyApplication extends Application {
                     int amount = -1 + ((int)(Math.random() * 7));
                     moduleInterfaceUI.setProperty(name, amount);
                 }
+                case "d" -> {
+                    int value_1 = 1 + (int)(Math.random() * 6);
+                    int value_2 = 1 + (int)(Math.random() * 6);
+                    moduleInterfaceUI.showDices(value_1, value_2);
+                }
             }
         });
     }
