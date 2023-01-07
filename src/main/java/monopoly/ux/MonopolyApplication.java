@@ -5,20 +5,22 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import monopoly.context.Context;
+import monopoly.game.model.PropertyInformation;
+import monopoly.game.model.PropertyType;
 import monopoly.game.module.ModuleInterfaceGameImpl;
 import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNetImpl;
 import monopoly.ux.controller.SceneController;
-import monopoly.ux.model.Game;
-import monopoly.ux.model.GamePlayer;
-import monopoly.ux.model.Player;
+import monopoly.ux.model.*;
 import monopoly.ux.module.ModuleInterfaceUI;
 import monopoly.ux.module.ModuleInterfaceUIImpl;
 import monopoly.settings.SettingsContainer;
+import monopoly.ux.window.SubWindow;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class MonopolyApplication extends Application {
     private static Stage stage;
     private static boolean running = true;
     private static SceneController currentScene;
+
+    private static List<SubWindow> autoCloseableSubWindows;
 
     @Override
     public void start(Stage stage) {
@@ -55,6 +59,14 @@ public class MonopolyApplication extends Application {
             currentScene.onResize();
         };
 
+        autoCloseableSubWindows = new ArrayList<>();
+
+        stage.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+            for (int i = 0; i < autoCloseableSubWindows.size(); i++) {
+                autoCloseableSubWindows.get(i).onClick();
+            }
+        });
+
         stage.widthProperty().addListener(resizeListener);
         stage.heightProperty().addListener(resizeListener);
 
@@ -63,6 +75,14 @@ public class MonopolyApplication extends Application {
         stage.addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, (event) -> close());
 
         stage.show();
+    }
+
+    public static void addAutoClosingToSubWindow(SubWindow subWindow) {
+        autoCloseableSubWindows.add(subWindow);
+    }
+
+    public static void removeAutoClosingInSubWindow(SubWindow subWindow) {
+        autoCloseableSubWindows.remove(subWindow);
     }
 
     private void addDebugSystem() {
@@ -182,6 +202,30 @@ public class MonopolyApplication extends Application {
                     int value_1 = 1 + (int)(Math.random() * 6);
                     int value_2 = 1 + (int)(Math.random() * 6);
                     moduleInterfaceUI.showDices(value_1, value_2);
+                }
+                case "j" -> {
+                    boolean inJail = Math.random() > 0.5;
+                    moduleInterfaceUI.setInJail(inJail);
+                }
+                case "c" -> {
+                    GameQuestion question = new GameQuestion();
+                    PropertyInformation propertyInformation = new PropertyInformation();
+                    propertyInformation.setName("Baltic Avenue");
+                    propertyInformation.setPrice(1500);
+                    propertyInformation.setHousePrice(50);
+                    propertyInformation.setHotelPrice(300);
+                    propertyInformation.setRent(10);
+                    propertyInformation.setRent1House(100);
+                    propertyInformation.setRent2House(200);
+                    propertyInformation.setRent3House(300);
+                    propertyInformation.setRent4House(400);
+                    propertyInformation.setRentHotel(500);
+                    propertyInformation.setId(17);
+                    propertyInformation.setMortgagePrice(70);
+                    propertyInformation.setType(PropertyType.PROPERTY);
+                    question.setPropertyInformation(propertyInformation);
+                    question.setType(QuestionType.BUY_CONFIRMATION);
+                    moduleInterfaceUI.showDialog(question, 10);
                 }
             }
         });

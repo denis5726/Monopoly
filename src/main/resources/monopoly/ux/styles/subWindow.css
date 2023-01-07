@@ -1,0 +1,8 @@
+.background-sub {
+    -fx-background-color: rgb(50, 170, 50);
+    -fx-background-radius: 3px;
+}
+
+Label.title {
+    -fx-font-size: 30px;
+}

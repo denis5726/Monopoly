@@ -4,6 +4,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
@@ -11,19 +12,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onMouseClicked" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.window.PlayerInfoWindow">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="488.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.window.PlayerInfoWindow">
    <children>
-      <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" spacing="10.0">
+      <VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="488.0" spacing="10.0" styleClass="background-sub" stylesheets="@../styles/subWindow.css">
          <children>
             <Label fx:id="playerName" styleClass="player-name" text="Label">
                <font>
                   <Font size="1.0" />
                </font>
             </Label>
-            <GridPane alignment="CENTER" hgap="10.0" prefHeight="282.0" prefWidth="579.0">
+            <GridPane alignment="CENTER" hgap="10.0" prefHeight="282.0" prefWidth="215.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.39996337890625" minWidth="10.0" prefWidth="163.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="493.2000198364258" minWidth="10.0" prefWidth="405.4" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.39996337890625" minWidth="10.0" prefWidth="155.20000762939452" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="493.2000198364258" minWidth="10.0" prefWidth="301.5999923706055" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="216.8" minHeight="10.0" prefHeight="55.999967956542974" vgrow="SOMETIMES" />
@@ -37,7 +38,15 @@
                      </font>
                   </Label>
                   <Label text="Недвижимость:" GridPane.rowIndex="1" />
-                  <VBox fx:id="properties" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ScrollPane hbarPolicy="NEVER" prefHeight="202.0" prefWidth="178.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <content>
+                        <VBox fx:id="properties" prefHeight="206.0" prefWidth="278.0" styleClass="background-sub">
+                           <padding>
+                              <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                           </padding>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                </children>
                <VBox.margin>
                   <Insets />

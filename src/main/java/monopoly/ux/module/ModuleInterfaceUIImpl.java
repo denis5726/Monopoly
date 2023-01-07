@@ -119,6 +119,14 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
+    public void setInJail(boolean inJail) {
+        UIEvent event = new UIEvent();
+        event.setType(UIEventType.SET_IN_JAIL);
+        event.setInJail(inJail);
+        SceneController.pollEvent(event);
+    }
+
+    @Override
     public void addMessageChat(String text) {
         UIEvent event = new UIEvent();
         event.setType(UIEventType.ADD_MESSAGE_CHAT);

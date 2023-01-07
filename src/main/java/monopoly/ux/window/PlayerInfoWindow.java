@@ -1,21 +1,18 @@
 package monopoly.ux.window;
 
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.game.model.PlayerInfo;
-import monopoly.log.Logger;
-import monopoly.ux.controller.SceneController;
+import monopoly.ux.MonopolyApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayerInfoWindow extends Popup {
+public class PlayerInfoWindow extends SubWindow {
     @FXML
     public Label playerName;
     @FXML
@@ -24,28 +21,16 @@ public class PlayerInfoWindow extends Popup {
     public Label jailCardTitle;
     @FXML
     public VBox properties;
-    private static PlayerInfoWindow instance;
-    private static Scene scene;
-    private static PlayerInfo playerInfo;
 
-    public PlayerInfoWindow() {
-        instance = this;
+    public static void showWindow(PlayerInfo playerInfo) {
+        PlayerInfoWindow window = (PlayerInfoWindow) load("playerInfo", "Информация об игроке");
+        if (window != null) {
+            window.init(playerInfo);
+            window.show((Stage) Context.get("mainWindow"));
+        }
     }
 
-    public static PlayerInfoWindow getInstance() {
-        instance.init();
-        return instance;
-    }
-
-    public static void load(PlayerInfo playerInfo) {
-        scene = SceneController.getScene("playerInfo");
-        PlayerInfoWindow.playerInfo = playerInfo;
-    }
-
-    private void init() {
-        if (scene != null) getContent().add(scene.getRoot());
-        else Logger.error("Player info window file not found");
-
+    private void init(PlayerInfo playerInfo) {
         playerName.setText(playerInfo.getName());
         List<Label> properties = new ArrayList<>();
         for (String key : playerInfo.getProperties().keySet()) {
@@ -58,14 +43,17 @@ public class PlayerInfoWindow extends Popup {
             properties.add(new Label(key + " - " + amountString));
         }
         this.properties.getChildren().addAll(properties);
+
+        addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> hide());
+
         balance.setText(String.valueOf(playerInfo.getBalance()));
         jailCardTitle.setText((playerInfo.isHaveJailCard()) ? "Есть карточка освобождения из тюрьмы" :
                 "Нет карточки освобождения из тюрьмы");
-
-        show((Stage) Context.get("mainWindow"));
     }
 
-    public void onMouseClicked(MouseEvent mouseEvent) {
+    @Override
+    public void onClick() {
         hide();
+        MonopolyApplication.removeAutoClosingInSubWindow(this);
     }
 }

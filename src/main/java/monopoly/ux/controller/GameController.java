@@ -22,8 +22,11 @@ import monopoly.ux.controller.game.Dice;
 import monopoly.ux.controller.game.UIPlayer;
 import monopoly.ux.model.Game;
 import monopoly.ux.model.GamePlayer;
+import monopoly.ux.model.QuestionType;
 import monopoly.ux.module.event.UIEvent;
+import monopoly.ux.window.ActivityWindow;
 import monopoly.ux.window.DialogFabric;
+import monopoly.ux.window.EscapeJailDialog;
 import monopoly.ux.window.PlayerInfoWindow;
 
 import java.util.ArrayList;
@@ -59,8 +62,6 @@ public class GameController extends SceneController {
     @FXML
     public Button beginDialButton;
     @FXML
-    public Button dropDiceButton;
-    @FXML
     public VBox chatVBox;
     @FXML
     public VBox playersVBox;
@@ -76,9 +77,10 @@ public class GameController extends SceneController {
     public Label currentStepPlayer;
     @FXML
     public VBox propertyVBox;
+    @FXML
+    public Button escapeJailButton;
     private Dice dice1;
     private Dice dice2;
-    private PlayerInfoWindow playerInfoWindow;
     private Game game;
     private List<UIPlayer> playerList;
     private Cell[] cells;
@@ -175,14 +177,9 @@ public class GameController extends SceneController {
     }
 
     private void showPlayerInfo(GamePlayer gamePlayer) {
-        if (playerInfoWindow != null) playerInfoWindow.hide();
-
         ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
-
         PlayerInfo playerInfo = moduleInterfaceGame.getPlayerInfo(gamePlayer);
-
-        PlayerInfoWindow.load(playerInfo);
-        playerInfoWindow = PlayerInfoWindow.getInstance();
+        PlayerInfoWindow.showWindow(playerInfo);
     }
 
     private Label getPlayerLabel(int row, int column) {
@@ -270,7 +267,12 @@ public class GameController extends SceneController {
 
     @Override
     protected void onShowDialog(UIEvent uiEvent) {
-
+        ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
+        if (uiEvent.getQuestion().getType() == QuestionType.BUY_CONFIRMATION) {
+            uiEvent.getQuestion().setChoose(DialogFabric.showBuyConfirmation(
+                    uiEvent.getQuestion().getPropertyInformation()));
+            moduleInterfaceGame.sendResponse(uiEvent.getQuestion());
+        }
     }
 
     @Override
@@ -320,6 +322,11 @@ public class GameController extends SceneController {
         addChatText(log);
     }
 
+    @Override
+    protected void onSetInJail(UIEvent uiEvent) {
+        escapeJailButton.setDisable(uiEvent.isInJail());
+    }
+
     public void backButtonAction(ActionEvent actionEvent) {
         if (DialogFabric.showQuitGame()) MonopolyApplication.setScene("mainMenu", new SceneContext());
     }
@@ -333,10 +340,10 @@ public class GameController extends SceneController {
     }
 
     public void beginDialAction(ActionEvent actionEvent) {
-
+        ActivityWindow.showDialog();
     }
 
-    public void dropDiceAction(ActionEvent actionEvent) {
-
+    public void escapeJailAction(ActionEvent actionEvent) {
+        EscapeJailDialog.showDialog();
     }
 }

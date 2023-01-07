@@ -26,6 +26,8 @@ public class UIEvent {
     private int value_2;
     private GameQuestion question;
 
+    private boolean inJail;
+
     public UIEvent() {
 
     }
@@ -172,5 +174,13 @@ public class UIEvent {
 
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
+    }
+
+    public boolean isInJail() {
+        return inJail;
+    }
+
+    public void setInJail(boolean inJail) {
+        this.inJail = inJail;
     }
 }

@@ -40,6 +40,11 @@ public abstract class SceneController {
         UIEvent.setHandler(UIEventType.SHOW_DICE, this::onShowDices);
         UIEvent.setHandler(UIEventType.START_GAME, this::onStartGame);
         UIEvent.setHandler(UIEventType.SET_PROPERTY, this::onSetProperty);
+        UIEvent.setHandler(UIEventType.SET_IN_JAIL, this::onSetInJail);
+    }
+
+    protected void onSetInJail(UIEvent uiEvent) {
+
     }
 
     protected void onSetProperty(UIEvent uiEvent) {

@@ -26,6 +26,8 @@ public interface ModuleInterfaceUI {
 
     void showDialog(GameQuestion question, int waitingTime);
 
+    void setInJail(boolean inJail);
+
     void setStepCountdown(int stepCountdown);
 
     void showDices(int value_1, int value_2);

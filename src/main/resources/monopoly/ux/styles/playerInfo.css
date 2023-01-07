@@ -5,10 +5,3 @@
 .player-name {
     -fx-font-size: 30px;
 }
-
-.player-info-background {
-    -fx-border-color: rgb(30, 170, 30);
-    -fx-border-width: 3px;
-    -fx-border-radius: 7px;
-    -fx-background-radius: 7px;
-}
