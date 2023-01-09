@@ -2,14 +2,20 @@ package monopoly.ux.window;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.util.Pair;
 import monopoly.context.Context;
 import monopoly.game.model.PropertyInformation;
 import monopoly.net.module.ModuleInterfaceNet;
+import monopoly.ux.MonopolyApplication;
+import monopoly.ux.controller.game.Card;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DialogFabric {
@@ -18,8 +24,7 @@ public class DialogFabric {
         dialog.setTitle("Подключение по паролю");
         dialog.setHeaderText("Введите пароль для входа в игру");
 
-        ButtonType loginButtonType = new ButtonType("Ok", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -32,7 +37,7 @@ public class DialogFabric {
         grid.add(new Label("Пароль:"), 0, 1);
         grid.add(password, 1, 1);
 
-        Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
+        Node loginButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
         loginButton.setDisable(true);
 
         password.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -116,34 +121,79 @@ public class DialogFabric {
     }
 
     public static boolean showBuyConfirmation(PropertyInformation propertyInformation) {
-        Dialog<ButtonType> dialog = new Dialog<>();
+        Dialog<ButtonType> dialog = createPropertyDialog(propertyInformation);
         dialog.setTitle("Подтверждение покупки недвижимости");
         dialog.setHeaderText("Хотите ли вы приобрести этот участок?");
-
-        ButtonType okButtonType = new ButtonType("Да", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Нет", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-
-        grid.add(new Label(propertyInformation.getName()), 0, 0);
-        grid.add(new Label("Стоимость участка: " + propertyInformation.getPrice() + "$"), 0, 1);
-        grid.add(new Label("Стоимость за дом: " + propertyInformation.getHousePrice() + "$"), 0, 2);
-        grid.add(new Label("Стоимость отеля : " + propertyInformation.getHotelPrice() + "$"), 0, 3);
-        grid.add(new Label("Стоимость аренды: " + propertyInformation.getRent() + "$"), 0, 4);
-        grid.add(new Label("Стоимость аренды с 1 домом: " + propertyInformation.getRent1House() + "$"), 0, 5);
-        grid.add(new Label("Стоимость аренды с 2 домами: " + propertyInformation.getRent2House() + "$"), 0, 6);
-        grid.add(new Label("Стоимость аренды с 3 домами: " + propertyInformation.getRent3House() + "$"), 0, 7);
-        grid.add(new Label("Стоимость аренды с 4 домами: " + propertyInformation.getRent4House() + "$"), 0, 8);
-        grid.add(new Label("Стоимость аренды с отелем: " + propertyInformation.getRentHotel() + "$"), 0, 9);
-
-        dialog.getDialogPane().setContent(grid);
 
         dialog.showAndWait();
 
         return dialog.getResult().getText().equals("Да");
+    }
+
+    public static boolean showAuctionConfirmation(PropertyInformation propertyInformation) {
+        Dialog<ButtonType> dialog = createPropertyDialog(propertyInformation);
+        dialog.setTitle("Подтверждение участия в аукционе");
+        dialog.setHeaderText("Хотите ли вы участвовать в аукционе за этот участок?");
+
+        dialog.showAndWait();
+
+        return dialog.getResult().getText().equals("Да");
+    }
+
+    private static Dialog<ButtonType> createPropertyDialog(PropertyInformation propertyInformation) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+
+        ButtonType okButtonType = new ButtonType("Да", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelButtonType = new ButtonType("Нет", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.TOP_CENTER);
+        hBox.getChildren().add(new Card(propertyInformation));
+        dialog.getDialogPane().setContent(hBox);
+
+        return dialog;
+    }
+
+    public static List<PropertyInformation> showMortgagePropertyChoosingDialog
+            (List<PropertyInformation> propertyInformationList) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Выбор недвижимости");
+        dialog.setTitle("Выберите имущество для продажи в залог");
+
+        ButtonType buttonType = new ButtonType("Выбрать", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().clear();
+        dialog.getDialogPane().getButtonTypes().add(buttonType);
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        HBox hBox = new HBox();
+        hBox.getStylesheets().add(MonopolyApplication.loadResource("styles/main.css").toExternalForm());
+        hBox.getStyleClass().add("background");
+
+        for (int i = 0; i < propertyInformationList.size(); i++) {
+            Card card = new Card(propertyInformationList.get(i));
+            card.setId("property " + i);
+
+            card.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
+                card.setSelected(!card.isSelected());
+            });
+
+            hBox.getChildren().add(card);
+            hBox.setPrefHeight(card.getPrefHeight());
+        }
+
+        hBox.setSpacing(3);
+
+        scrollPane.setContent(hBox);
+        scrollPane.setPrefHeight(hBox.getPrefHeight() + 30);
+        scrollPane.setPrefWidth(600);
+
+        dialog.getDialogPane().setContent(scrollPane);
+
+        dialog.showAndWait();
+
+        return hBox.getChildren().stream()
+                .filter((obj) -> ((Card)obj).isSelected())
+                .map((obj) -> ((Card)obj).getPropertyInformation()).toList();
     }
 }

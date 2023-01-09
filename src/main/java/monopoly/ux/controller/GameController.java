@@ -271,8 +271,14 @@ public class GameController extends SceneController {
         if (uiEvent.getQuestion().getType() == QuestionType.BUY_CONFIRMATION) {
             uiEvent.getQuestion().setChoose(DialogFabric.showBuyConfirmation(
                     uiEvent.getQuestion().getPropertyInformation()));
-            moduleInterfaceGame.sendResponse(uiEvent.getQuestion());
         }
+        else if (uiEvent.getQuestion().getType() == QuestionType.AUCTION_CONFIRMATION) {
+            uiEvent.getQuestion().setChoose(DialogFabric.showAuctionConfirmation(
+                    uiEvent.getQuestion().getPropertyInformation()));
+        }
+        else uiEvent.getQuestion().setPropertiesInformation(DialogFabric.showMortgagePropertyChoosingDialog(
+                uiEvent.getQuestion().getPropertiesInformation()));
+        moduleInterfaceGame.sendResponse(uiEvent.getQuestion());
     }
 
     @Override

@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -26,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MonopolyApplication extends Application {
     private static Stage stage;
@@ -39,6 +41,10 @@ public class MonopolyApplication extends Application {
         MonopolyApplication.stage = stage;
 
         Logger.trace(Font.loadFont(loadResource("fonts/kabelctt.ttf").
+                toExternalForm(), 10).getName());
+        Logger.trace(Font.loadFont(loadResource("fonts/kabelcttBold.ttf").
+                toExternalForm(), 10).getName());
+        Logger.trace(Font.loadFont(loadResource("fonts/kabelLight.ttf").
                 toExternalForm(), 10).getName());
 
         stage.getIcons().add(new Image(loadResource("icon.png").toExternalForm()));
@@ -113,8 +119,32 @@ public class MonopolyApplication extends Application {
                 "Status Avenue"
         };
 
+        Color[] colors = new Color[] {
+            Color.BROWN, Color.LIGHTBLUE, Color.PINK, Color.ORANGE, Color.RED, Color.YELLOW, Color.GREEN,
+                Color.DARKBLUE
+        };
+
         List<String> players = new ArrayList<>(Arrays.asList(playersNames));
         List<String> playersInGame = new ArrayList<>();
+
+        Consumer<PropertyInformation> randomPropertyInformation = (obj) -> {
+            int nameIndex = (int) (Math.random() * propertyNames.length);
+            obj.setName(propertyNames[nameIndex]);
+            obj.setPrice((int) (Math.random() * 1000));
+            obj.setHousePrice((int) (Math.random() * 200));
+            obj.setHotelPrice((int) (Math.random() * 300));
+            obj.setRent((int) (Math.random() * 100));
+            obj.setRent1House((int) (Math.random() * 200));
+            obj.setRent2House((int) (Math.random() * 300));
+            obj.setRent3House((int) (Math.random() * 400));
+            obj.setRent4House((int) (Math.random() * 500));
+            obj.setRentHotel((int) (Math.random() * 1000));
+            obj.setId((int) (Math.random() * 40));
+            obj.setMortgagePrice((int) (Math.random() * 170));
+            obj.setColor(colors[(int) (Math.random() * colors.length)]);
+            obj.setType(PropertyType.valueOf(PropertyType.values()[(int) (Math.random()
+                    * PropertyType.values().length)].toString()));
+        };
 
         stage.addEventHandler(KeyEvent.KEY_PRESSED, (event) -> {
             String code = event.getText();
@@ -209,22 +239,27 @@ public class MonopolyApplication extends Application {
                 }
                 case "c" -> {
                     GameQuestion question = new GameQuestion();
-                    PropertyInformation propertyInformation = new PropertyInformation();
-                    propertyInformation.setName("Baltic Avenue");
-                    propertyInformation.setPrice(1500);
-                    propertyInformation.setHousePrice(50);
-                    propertyInformation.setHotelPrice(300);
-                    propertyInformation.setRent(10);
-                    propertyInformation.setRent1House(100);
-                    propertyInformation.setRent2House(200);
-                    propertyInformation.setRent3House(300);
-                    propertyInformation.setRent4House(400);
-                    propertyInformation.setRentHotel(500);
-                    propertyInformation.setId(17);
-                    propertyInformation.setMortgagePrice(70);
-                    propertyInformation.setType(PropertyType.PROPERTY);
-                    question.setPropertyInformation(propertyInformation);
-                    question.setType(QuestionType.BUY_CONFIRMATION);
+                    question.setType(QuestionType.valueOf(QuestionType.values()[(int) (Math.random() *
+                                                QuestionType.values().length)].toString()));
+                    if (question.getType() == QuestionType.BUY_CONFIRMATION) {
+                        PropertyInformation propertyInformation = new PropertyInformation();
+                        randomPropertyInformation.accept(propertyInformation);
+                        question.setPropertyInformation(propertyInformation);
+                    }
+                    else if (question.getType() == QuestionType.AUCTION_CONFIRMATION) {
+                        PropertyInformation propertyInformation = new PropertyInformation();
+                        randomPropertyInformation.accept(propertyInformation);
+                        question.setPropertyInformation(propertyInformation);
+                    }
+                    else {
+                        int listSize = (int) (Math.random() * 28);
+                        for (int i = 0; i < listSize; i++) {
+                            PropertyInformation propertyInformation = new PropertyInformation();
+                            randomPropertyInformation.accept(propertyInformation);
+                            question.getPropertiesInformation().add(propertyInformation);
+                        }
+                    }
+
                     moduleInterfaceUI.showDialog(question, 10);
                 }
             }

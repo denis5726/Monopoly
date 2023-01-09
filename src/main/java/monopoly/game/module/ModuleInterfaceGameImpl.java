@@ -2,6 +2,7 @@ package monopoly.game.module;
 
 import monopoly.game.model.GameActivity;
 import monopoly.game.model.PlayerInfo;
+import monopoly.log.Logger;
 import monopoly.ux.model.GamePlayer;
 import monopoly.ux.model.GameQuestion;
 import monopoly.game.model.PropertyInformation;
@@ -67,7 +68,8 @@ public class ModuleInterfaceGameImpl implements ModuleInterfaceGame {
 
     @Override
     public void sendResponse(GameQuestion question) {
-
+        Logger.trace("Type question: " + question.getType().toString() + ", Response: " + question.isChoose() + " "
+            + question.getPropertyInformation());
     }
 
     @Override
