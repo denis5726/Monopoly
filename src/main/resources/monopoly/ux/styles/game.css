@@ -17,7 +17,6 @@
 }
 
 .player {
-	-fx-background-color: rgb(50, 170, 50);
 	-fx-background-radius: 3px;
 	-fx-text-fill: rgb(13, 15, 17);
 	-fx-font-size: 17px;
@@ -31,24 +30,13 @@
 	-fx-background-color: rgb(30, 150, 30);
 }
 
-#popup {
-	-fx-font-size: 30px;
-	-fx-border-color: rgb(30, 170, 30);
-	-fx-border-width: 3px;
-	-fx-border-radius: 7px;
-	-fx-background-radius: 7px;
-}
-
 #propertyVBox {
-	-fx-background-color: rgb(70, 230, 70);
-	-fx-border-color: rgb(70, 230, 70);
 	-fx-border-width: 3px;
 	-fx-start-margin: 3px;
 	-fx-end-margin: 3px;
 }
 
 .property {
-	-fx-background-color: rgb(50, 170, 50);
 	-fx-background-radius: 3px;
 }
 
@@ -62,4 +50,8 @@
 
 .property:pressed {
 	-fx-background-color: rgb(30, 150, 30);
+}
+
+.in-mortgage {
+	-fx-background-color: rgb(230, 100, 100);
 }

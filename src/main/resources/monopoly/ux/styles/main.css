@@ -3,16 +3,42 @@
 	-fx-text-fill: white;
 }
 
+ScrollPane {
+	-fx-background-color: transparent;
+}
+
 Separator {
 	visibility: false;
+}
+
+Label.label {
+	-fx-font-size: 21px;
 }
 
 .background-color {
 	-fx-background-color: rgb(100, 250, 100);
 }
 
+.middle-color {
+	-fx-background-color: rgb(70, 200, 70);
+}
+
+.dark-color {
+	-fx-background-color: rgb(50, 170, 50);
+}
+
+.light-color {
+	-fx-background-color: rgb(100, 250, 100);
+}
+
 .background {
 	-fx-background-color: rgb(100, 250, 100);
+}
+
+Separator.header-separator {
+	-fx-min-height: 57px;
+	-fx-max-height: 57px;
+	-fx-pref-height: 57px;
 }
 
 .header {

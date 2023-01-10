@@ -1,7 +1,5 @@
 package monopoly.game.model;
 
-import javafx.scene.paint.Color;
-
 public class PropertyInformation {
     private PropertyType type;
     private String name;
@@ -16,8 +14,8 @@ public class PropertyInformation {
     private int rent3House;
     private int rent4House;
     private int rentHotel;
-
-    private Color color;
+    private PropertyColor color;
+    private int payment;
 
     public PropertyType getType() {
         return type;
@@ -123,11 +121,19 @@ public class PropertyInformation {
         this.rentHotel = rentHotel;
     }
 
-    public Color getColor() {
+    public PropertyColor getColor() {
         return color;
     }
 
-    public void setColor(Color color) {
+    public void setColor(PropertyColor color) {
         this.color = color;
+    }
+
+    public int getPayment() {
+        return payment;
+    }
+
+    public void setPayment(int payment) {
+        this.payment = payment;
     }
 }

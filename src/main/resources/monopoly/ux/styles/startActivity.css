@@ -1,0 +1,11 @@
+Label.header {
+    -fx-text-fill: black;
+    -fx-background-color: white;
+}
+
+.text-sub {
+    -fx-font-size: 29px;
+    -fx-text-fill: black;
+    -fx-font-family: 'KabelCTT Medium', Arial;
+}
+

@@ -11,9 +11,8 @@ public class UIEvent {
     private static final Map<UIEventType, UIEventHandler> handlers = new HashMap<>();
     private CreatedGame createdGame;
     private List<CreatedGame> createdGames;
-    private Game game;
+    private UIGame UIGame;
     private Player player;
-    private GamePlayer gamePlayer;
     private List<Player> players;
     private String message;
     private String sender;
@@ -25,8 +24,8 @@ public class UIEvent {
     private int value_1;
     private int value_2;
     private GameQuestion question;
-
     private boolean inJail;
+    private String playerName;
 
     public UIEvent() {
 
@@ -48,12 +47,12 @@ public class UIEvent {
         this.type = type;
     }
 
-    public Game getGame() {
-        return game;
+    public UIGame getGame() {
+        return UIGame;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setGame(UIGame UIGame) {
+        this.UIGame = UIGame;
     }
 
     public CreatedGame getCreatedGame() {
@@ -70,14 +69,6 @@ public class UIEvent {
 
     public void setCreatedGames(List<CreatedGame> createdGames) {
         this.createdGames = createdGames;
-    }
-
-    public GamePlayer getGamePlayer() {
-        return gamePlayer;
-    }
-
-    public void setGamePlayer(GamePlayer gamePlayer) {
-        this.gamePlayer = gamePlayer;
     }
 
     public Player getPlayer() {
@@ -182,5 +173,21 @@ public class UIEvent {
 
     public void setInJail(boolean inJail) {
         this.inJail = inJail;
+    }
+
+    public monopoly.ux.model.UIGame getUIGame() {
+        return UIGame;
+    }
+
+    public void setUIGame(monopoly.ux.model.UIGame UIGame) {
+        this.UIGame = UIGame;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }

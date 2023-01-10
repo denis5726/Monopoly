@@ -6,22 +6,23 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import monopoly.context.Context;
+import monopoly.game.model.PropertyColor;
 import monopoly.game.model.PropertyInformation;
 import monopoly.game.model.PropertyType;
 import monopoly.game.module.ModuleInterfaceGameImpl;
 import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNetImpl;
 import monopoly.ux.controller.SceneController;
+import monopoly.ux.controller.game.UIPlayer;
 import monopoly.ux.model.*;
 import monopoly.ux.module.ModuleInterfaceUI;
 import monopoly.ux.module.ModuleInterfaceUIImpl;
 import monopoly.settings.SettingsContainer;
-import monopoly.ux.window.SubWindow;
+import monopoly.ux.window.AutoCloseableWindow;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,7 +35,8 @@ public class MonopolyApplication extends Application {
     private static boolean running = true;
     private static SceneController currentScene;
 
-    private static List<SubWindow> autoCloseableSubWindows;
+    private static List<AutoCloseableWindow> autoCloseableSubWindows;
+    private static boolean inc = true;
 
     @Override
     public void start(Stage stage) {
@@ -83,12 +85,12 @@ public class MonopolyApplication extends Application {
         stage.show();
     }
 
-    public static void addAutoClosingToSubWindow(SubWindow subWindow) {
-        autoCloseableSubWindows.add(subWindow);
+    public static void addAutoClosingToSubWindow(AutoCloseableWindow autoCloseableWindow) {
+        autoCloseableSubWindows.add(autoCloseableWindow);
     }
 
-    public static void removeAutoClosingInSubWindow(SubWindow subWindow) {
-        autoCloseableSubWindows.remove(subWindow);
+    public static void removeAutoClosingInSubWindow(AutoCloseableWindow autoCloseableWindow) {
+        autoCloseableSubWindows.remove(autoCloseableWindow);
     }
 
     private void addDebugSystem() {
@@ -119,11 +121,6 @@ public class MonopolyApplication extends Application {
                 "Status Avenue"
         };
 
-        Color[] colors = new Color[] {
-            Color.BROWN, Color.LIGHTBLUE, Color.PINK, Color.ORANGE, Color.RED, Color.YELLOW, Color.GREEN,
-                Color.DARKBLUE
-        };
-
         List<String> players = new ArrayList<>(Arrays.asList(playersNames));
         List<String> playersInGame = new ArrayList<>();
 
@@ -141,9 +138,10 @@ public class MonopolyApplication extends Application {
             obj.setRentHotel((int) (Math.random() * 1000));
             obj.setId((int) (Math.random() * 40));
             obj.setMortgagePrice((int) (Math.random() * 170));
-            obj.setColor(colors[(int) (Math.random() * colors.length)]);
-            obj.setType(PropertyType.valueOf(PropertyType.values()[(int) (Math.random()
-                    * PropertyType.values().length)].toString()));
+            obj.setColor(PropertyColor.values()[(int) (Math.random() *
+                    PropertyColor.values().length)]);
+            obj.setType(PropertyType.values()[(int) (Math.random()
+                    * PropertyType.values().length)]);
         };
 
         stage.addEventHandler(KeyEvent.KEY_PRESSED, (event) -> {
@@ -174,15 +172,17 @@ public class MonopolyApplication extends Application {
                     players.add(name);
                 }
                 case "s" -> {
-                    Game game = new Game();
-                    List<GamePlayer> gamePlayers = new ArrayList<>();
+                    UIGame UIGame = new UIGame();
+                    List<UIPlayer> playersList = new ArrayList<>();
                     for (String playerName : playersInGame) {
-                        GamePlayer gamePlayer = new GamePlayer();
-                        gamePlayer.setName(playerName);
-                        gamePlayers.add(gamePlayer);
+                        UIPlayer uiPlayer = new UIPlayer();
+                        uiPlayer.setName(playerName);
+                        playersList.add(uiPlayer);
                     }
-                    game.setPlayers(gamePlayers);
-                    moduleInterfaceUI.startGame(game);
+                    int currentPlayerIndex = (int) (Math.random() * playersList.size());
+                    playersList.get(currentPlayerIndex).setCurrent(true);
+                    UIGame.setPlayers(playersList);
+                    moduleInterfaceUI.startGame(UIGame);
                 }
                 case "l" -> {
                     if (playersInGame.size() == 0) return;
@@ -200,18 +200,13 @@ public class MonopolyApplication extends Application {
                 case "b" -> {
                     if (playersInGame.size() == 0) return;
                     int indexPlayer = (int) (Math.random() * playersInGame.size());
-                    GamePlayer player = new GamePlayer();
-                    player.setName(playersInGame.get(indexPlayer));
-                    moduleInterfaceUI.setPlayerMoney(player, (int) (Math.random() * 100000));
+                    moduleInterfaceUI.setPlayerMoney(playersInGame.get(indexPlayer), (int) (Math.random() * 100000));
                 }
                 case "g" -> {
                     if (playersInGame.size() == 0) return;
                     int indexPlayer = (int) (Math.random() * playersInGame.size());
-                    GamePlayer player = new GamePlayer();
-                    player.setName(playersInGame.get(indexPlayer));
                     int pos = (int) (Math.random() * 40);
-                    Logger.trace("Remove " + player.getName() + " to " + pos);
-                    moduleInterfaceUI.removePlayerTo(player, pos);
+                    moduleInterfaceUI.removePlayerTo(playersInGame.get(indexPlayer), pos);
                 }
                 case "t" -> {
                     int time = (int) (Math.random() * 107);
@@ -283,6 +278,11 @@ public class MonopolyApplication extends Application {
         stage.setScene(scene);
         currentScene = (SceneController) Context.get(nameScene);
         currentScene.onCreateScene(context);
+
+        if (inc) stage.setWidth(stage.getWidth() + 1);
+        else stage.setWidth(stage.getWidth() - 1);
+        inc = !inc;
+
 
         if (currentScene == null) Logger.error("Scene with name " + nameScene + " is not found");
     }

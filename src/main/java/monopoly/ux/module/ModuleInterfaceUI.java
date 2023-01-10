@@ -18,9 +18,9 @@ public interface ModuleInterfaceUI {
 
     void removeGame(CreatedGame createdGame);
 
-    void setPlayerMoney(GamePlayer gamePlayer, int money);
+    void setPlayerMoney(String playerName, int money);
 
-    void removePlayerTo(GamePlayer gamePlayer, int position);
+    void removePlayerTo(String playerName, int position);
 
     void setHomeNum(int position, int num);
 
@@ -36,9 +36,9 @@ public interface ModuleInterfaceUI {
 
     void addMessageChat(String text);
 
-    void setNextStep(GamePlayer gamePlayer);
+    void setNextStep(String playerName);
 
     void setProperty(String name, int amount);
 
-    void startGame(Game game);
+    void startGame(UIGame UIGame);
 }

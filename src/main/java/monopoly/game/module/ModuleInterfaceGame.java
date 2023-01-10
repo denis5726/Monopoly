@@ -1,16 +1,17 @@
 package monopoly.game.module;
 
 import monopoly.game.model.GameActivity;
-import monopoly.game.model.PlayerInfo;
-import monopoly.ux.model.GamePlayer;
+import monopoly.game.model.GamePlayerInformation;
 import monopoly.ux.model.GameQuestion;
 import monopoly.game.model.PropertyInformation;
+
+import java.util.List;
 
 public interface ModuleInterfaceGame {
 
     void startActivity(GameActivity activity);
 
-    PlayerInfo getPlayerInfo(GamePlayer player);
+    GamePlayerInformation getPlayerInfo(String playerName);
 
     void placeAuctionBet(int money);
 
@@ -27,6 +28,10 @@ public interface ModuleInterfaceGame {
     void useCartForOutOfJail();
 
     void sendResponse(GameQuestion question);
+
+    boolean haveJailCard(String playerName);
+
+    List<String> getPropertyForSell(String playerName);
 
     void exit();
 }

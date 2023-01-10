@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="600.0" styleClass="background-dialog" style="-fx-background-color: white" stylesheets="@../styles/dialog.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="476.0" prefWidth="597.0" spacing="7.0">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+         </padding>
+         <children>
+            <HBox alignment="CENTER" spacing="7.0" styleClass="header-wrapper">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="58.0" prefWidth="492.0">
+                     <children>
+                        <Label fx:id="title" styleClass="header-title" text="Label" />
+                     </children>
+                     <styleClass>
+                        <String fx:value="header" />
+                        <String fx:value="bordered" />
+                     </styleClass>
+                  </HBox>
+                  <Button alignment="TOP_LEFT" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0">
+                     <styleClass>
+                        <String fx:value="close-button" />
+                        <String fx:value="bordered" />
+                     </styleClass>
+                     <graphic>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Line endX="46.0" endY="50.0" startX="6.0" startY="10.0" stroke="WHITE" strokeWidth="3.0" />
+                              <Line endX="46.0" endY="10.0" startX="6.0" startY="50.0" stroke="WHITE" strokeWidth="3.0" />
+                           </children>
+                        </AnchorPane>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <VBox fx:id="contentVBox" alignment="CENTER" prefHeight="301.0" prefWidth="576.0" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="581.0" spacing="7.0" styleClass="button-wrapper" />
+         </children>
+         <styleClass>
+            <String fx:value="bordered" />
+            <String fx:value="wrapper" />
+         </styleClass>
+      </VBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

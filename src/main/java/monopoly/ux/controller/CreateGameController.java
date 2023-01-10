@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import monopoly.context.Context;
+import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
@@ -34,7 +35,7 @@ public class CreateGameController extends SceneController {
     @FXML
     public Button next;
     @FXML
-    public Pane pane;
+    public VBox pane;
     @FXML
     public HBox hBox;
     @FXML
@@ -85,12 +86,13 @@ public class CreateGameController extends SceneController {
     @Override
     public void onResize() {
         Stage stage = (Stage) Context.get("mainWindow");
+
         double w = stage.getWidth();
         double h = stage.getHeight();
 
         pane.setPrefSize(w, h);
-
         hBox.setPrefSize(w, h);
+        vBox.setPrefSize(0.733 * w, h);
     }
 
     public void nextAction(ActionEvent actionEvent) {

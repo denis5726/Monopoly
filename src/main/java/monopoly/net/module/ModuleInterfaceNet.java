@@ -1,7 +1,7 @@
 package monopoly.net.module;
 
 import monopoly.ux.model.CreatedGame;
-import monopoly.ux.model.GamePlayer;
+import monopoly.ux.model.GameQuestion;
 
 import java.util.List;
 
@@ -18,6 +18,8 @@ public interface ModuleInterfaceNet {
     String connectToGame(CreatedGame createdGame);
 
     void sendChatMessage(String message);
+
+    void sendQuestion(String playerName, GameQuestion gameQuestion, int waitingTime);
 
     void leaveGameQueue();
 }

@@ -11,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import monopoly.game.model.PropertyColor;
 import monopoly.game.model.PropertyInformation;
 
 public class Card extends AnchorPane {
@@ -54,7 +55,7 @@ public class Card extends AnchorPane {
         Rectangle headerRectangle = new Rectangle(wrapper.getX() +
                 (wrapperWidth - headerRectangleWidth) / 2.0, wrapper.getY() +
                 (wrapperWidth - headerRectangleWidth) / 2.0, headerRectangleWidth, headerRectangleHeight);
-        headerRectangle.setFill(propertyInformation.getColor());
+        headerRectangle.setFill(getColorByPropertyColor(propertyInformation.getColor()));
         headerRectangle.setStroke(Color.BLACK);
         headerRectangle.setStrokeWidth(1);
 
@@ -142,6 +143,19 @@ public class Card extends AnchorPane {
         t2.setTextAlignment(TextAlignment.RIGHT);
         setFont(t2, font, 0.07 * getPrefWidth());
         grid.addRow(i, t1, t2);
+    }
+
+    private Color getColorByPropertyColor(PropertyColor propertyColor) {
+        return switch (propertyColor) {
+            case BROWN -> Color.BROWN;
+            case BLUE -> new Color(0.38, 0.7, 1, 1);
+            case PINK -> new Color(1, 0.3, 0.3, 1);
+            case ORANGE -> new Color(1, 0.47, 0, 1);
+            case RED -> Color.RED;
+            case YELLOW -> Color.YELLOW;
+            case GREEN -> Color.GREEN;
+            case DARKBLUE -> Color.DARKBLUE;
+        };
     }
 
     public Card(PropertyInformation propertyInformation) {

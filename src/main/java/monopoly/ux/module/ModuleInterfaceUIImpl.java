@@ -57,19 +57,19 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
-    public void setPlayerMoney(GamePlayer gamePlayer, int money) {
+    public void setPlayerMoney(String playerName, int money) {
         UIEvent event = new UIEvent();
         event.setType(UIEventType.SET_PLAYER_MONEY);
-        event.setGamePlayer(gamePlayer);
+        event.setPlayerName(playerName);
         event.setAmount(money);
         SceneController.pollEvent(event);
     }
 
     @Override
-    public void removePlayerTo(GamePlayer gamePlayer, int position) {
+    public void removePlayerTo(String playerName, int position) {
         UIEvent event = new UIEvent();
         event.setType(UIEventType.REMOVE_PLAYER_TO);
-        event.setGamePlayer(gamePlayer);
+        event.setPlayerName(playerName);
         event.setPosition(position);
         SceneController.pollEvent(event);
     }
@@ -111,10 +111,10 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
-    public void startGame(Game game) {
+    public void startGame(UIGame UIGame) {
         UIEvent event = new UIEvent();
         event.setType(UIEventType.START_GAME);
-        event.setGame(game);
+        event.setGame(UIGame);
         SceneController.pollEvent(event);
     }
 
@@ -135,10 +135,10 @@ public class ModuleInterfaceUIImpl implements ModuleInterfaceUI {
     }
 
     @Override
-    public void setNextStep(GamePlayer gamePlayer) {
+    public void setNextStep(String playerName) {
         UIEvent event = new UIEvent();
         event.setType(UIEventType.SET_NEXT_STEP);
-        event.setGamePlayer(gamePlayer);
+        event.setPlayerName(playerName);
         SceneController.pollEvent(event);
     }
 

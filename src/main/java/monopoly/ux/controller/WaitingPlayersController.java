@@ -12,7 +12,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import monopoly.context.Context;
@@ -33,7 +32,7 @@ public class WaitingPlayersController extends SceneController {
     @FXML
     public Button back;
     @FXML
-    public Pane pane;
+    public VBox pane;
     @FXML
     public HBox hBox;
     @FXML
@@ -84,7 +83,7 @@ public class WaitingPlayersController extends SceneController {
 
     private void updatingHeaderService() {
         Service<String> updateHeader = new Service<>() {
-            private IntegerProperty count = new SimpleIntegerProperty(0);
+            private final IntegerProperty count = new SimpleIntegerProperty(0);
             @Override
             protected Task<String> createTask() {
                 return new Task<>() {

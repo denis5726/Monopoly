@@ -1,21 +1,11 @@
-#hBox {
-    -fx-start-margin: 10px;
-    -fx-end-margin: 10px;
-    -fx-padding: 10px;
-}
-
 .game-scroll {
-    -fx-background-color: rgb(100, 250, 100);
     -fx-pref-width: 500px;
 }
 
 .game-scroll .game-record {
-    -fx-background-color: rgb(70, 230, 70);
-    -fx-pref-width: 940px;
     -fx-pref-height: 65px;
     -fx-alignment: center;
-    -fx-border-color: rgb(230, 230, 230);
-    -fx-border-width: 0px;
+    -fx-font-size: 21px;
 }
 
 .game-scroll .game-record:hover {
@@ -23,15 +13,26 @@
 }
 
 .game-scroll .game-record:pressed {
-    -fx-background-color: rgb(30, 200, 30);
+    -fx-background-color: rgb(50, 170, 50);
 }
 
-.game-header Label {
+.header-label {
+    -fx-fill: white;
     -fx-font-size: 23px;
+    -fx-text-alignment: center;
 }
 
 .game-record Label {
     -fx-font-size: 23px;
+}
+
+.selected-game-record {
+    -fx-border-width: 3px;
+    -fx-border-color: rgb(230, 230, 230);
+}
+
+.not-selected-game-record {
+    -fx-border-width: 0px;
 }
 
 .game-record .check-password {

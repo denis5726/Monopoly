@@ -15,8 +15,9 @@ public class EscapeJailDialog extends SubWindow {
     public Button useButton;
 
     public static void showDialog() {
-        EscapeJailDialog window = (EscapeJailDialog) load("escapeJail", "Виды сделок");
+        EscapeJailDialog window = (EscapeJailDialog) load("escapeJail");
         if (window != null) {
+            window.setTitle("Освобождение из тюрьмы");
             window.show((Stage) Context.get("mainWindow"));
         }
     }
@@ -25,12 +26,6 @@ public class EscapeJailDialog extends SubWindow {
         ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
         moduleInterfaceGame.payForOutOfJail();
         hide();
-    }
-
-    @Override
-    public void onClick() {
-        hide();
-        MonopolyApplication.removeAutoClosingInSubWindow(this);
     }
 
     public void useAction(ActionEvent event) {

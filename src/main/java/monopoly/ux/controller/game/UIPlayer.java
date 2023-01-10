@@ -43,6 +43,16 @@ public class UIPlayer {
     }
 
     @Override
+    public String toString() {
+        return "UIPlayer{" +
+                "name='" + name + '\'' +
+                ", balance=" + balance +
+                ", current=" + current +
+                ", circle=" + circle +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

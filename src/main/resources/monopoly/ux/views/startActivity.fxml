@@ -8,9 +8,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="352.0" prefWidth="381.0" spacing="7.0" styleClass="background-sub" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.window.ActivityWindow">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="576.0" spacing="7.0" styleClass="background-sub" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.window.ActivityWindow">
    <children>
-      <Label text="Выберите тип сделки">
+      <Label styleClass="header" text="Выберите тип сделки">
          <font>
             <Font size="31.0" />
          </font>
@@ -18,16 +18,17 @@
             <Insets bottom="3.0" />
          </VBox.margin>
       </Label>
-      <Button fx:id="buyPropertyButton" mnemonicParsing="false" onAction="#buyPropertyAction" prefWidth="300.0" text="Покупка недвижимости" />
-      <Button fx:id="sellPropertyButton" mnemonicParsing="false" onAction="#sellPropertyAction" prefWidth="300.0" text="Продажа недвижимости" />
-      <Button fx:id="buyEscapeJailButton" mnemonicParsing="false" onAction="#buyEscapeJailAction" prefHeight="114.0" prefWidth="300.0">
+      <Button fx:id="buyPropertyButton" mnemonicParsing="false" onAction="#buyPropertyAction" prefWidth="470.0" text="Покупка недвижимости" />
+      <Button fx:id="sellPropertyButton" mnemonicParsing="false" onAction="#sellPropertyAction" prefWidth="470.0" text="Продажа недвижимости" />
+      <Button fx:id="buyEscapeJailButton" mnemonicParsing="false" onAction="#buyEscapeJailAction" prefHeight="81.0" prefWidth="471.0">
          <graphic>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Покупка карточки освобождения из тюрьмы" textAlignment="CENTER" wrappingWidth="212.46121215820312" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Покупка карточки освобождения из тюрьмы" textAlignment="CENTER" wrappingWidth="430.0" />
          </graphic>
       </Button>
    </children>
    <stylesheets>
       <URL value="@../styles/main.css" />
       <URL value="@../styles/subWindow.css" />
+      <URL value="@../styles/startActivity.css" />
    </stylesheets>
 </VBox>

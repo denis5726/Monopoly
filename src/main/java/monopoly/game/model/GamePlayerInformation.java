@@ -2,7 +2,7 @@ package monopoly.game.model;
 
 import java.util.Map;
 
-public class PlayerInfo {
+public class GamePlayerInformation {
     private String name;
     private Map<String, Integer> properties;
     private int balance;

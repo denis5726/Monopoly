@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="576.0" styleClass="background-sub" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ScrollPane hbarPolicy="NEVER" prefHeight="301.0" prefWidth="576.0">
+         <content>
+            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="576.0" spacing="7.0" />
+         </content>
+      </ScrollPane>
+   </children>
+   <stylesheets>
+      <URL value="@../styles/main.css" />
+      <URL value="@../styles/subWindow.css" />
+   </stylesheets>
+</VBox>

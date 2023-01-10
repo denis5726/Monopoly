@@ -1,6 +1,7 @@
 package monopoly.ux.window;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -8,13 +9,21 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 import monopoly.context.Context;
 import monopoly.game.model.PropertyInformation;
+import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
+import monopoly.ux.controller.GameController;
 import monopoly.ux.controller.game.Card;
+import monopoly.ux.model.GameQuestion;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,73 +115,83 @@ public class DialogFabric {
         else return false;
     }
 
-    public static boolean showQuitGame() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Подтверждение выхода");
-        dialog.setHeaderText("Вы уверены, что хотите выйти из игры?");
-
-        ButtonType okButtonType = new ButtonType("Да", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-
-        dialog.showAndWait();
-
-        return dialog.getResult().getText().equals("Да");
+    public static void showQuitGame(GameController gameController) {
+        Button ok = new Button("Да");
+        Button cancel = new Button("Нет");
+        SubWindow subWindow = SubWindow.loadWithoutContent();
+        if (subWindow != null) {
+            subWindow.setTitle("Подтверждение выхода");
+            subWindow.setText("Вы действительно хотите выйти?");
+            subWindow.addButton(ok);
+            ok.addEventHandler(ActionEvent.ACTION, (event) -> {
+                gameController.goBackTransition();
+                subWindow.hide();
+            });
+            cancel.addEventHandler(ActionEvent.ACTION, (event) -> {
+                subWindow.hide();
+            });
+            subWindow.addButton(cancel);
+            subWindow.show((Stage) Context.get("mainWindow"));
+        }
     }
 
-    public static boolean showBuyConfirmation(PropertyInformation propertyInformation) {
-        Dialog<ButtonType> dialog = createPropertyDialog(propertyInformation);
-        dialog.setTitle("Подтверждение покупки недвижимости");
-        dialog.setHeaderText("Хотите ли вы приобрести этот участок?");
-
-        dialog.showAndWait();
-
-        return dialog.getResult().getText().equals("Да");
+    public static void showBuyConfirmation(GameQuestion gameQuestion, GameController gameController) {
+        showPropertyDialog("Подтверждение покупки", "Хотите ли вы приобрести этот участок?",
+                gameQuestion, gameController);
     }
 
-    public static boolean showAuctionConfirmation(PropertyInformation propertyInformation) {
-        Dialog<ButtonType> dialog = createPropertyDialog(propertyInformation);
-        dialog.setTitle("Подтверждение участия в аукционе");
-        dialog.setHeaderText("Хотите ли вы участвовать в аукционе за этот участок?");
-
-        dialog.showAndWait();
-
-        return dialog.getResult().getText().equals("Да");
+    public static void showAuctionConfirmation(GameQuestion gameQuestion, GameController gameController) {
+        showPropertyDialog("Участие в аукционе", "Хотите ли вы участвовать в аукционе за эту недвижимость?",
+                gameQuestion, gameController);
     }
 
-    private static Dialog<ButtonType> createPropertyDialog(PropertyInformation propertyInformation) {
-        Dialog<ButtonType> dialog = new Dialog<>();
-
-        ButtonType okButtonType = new ButtonType("Да", ButtonBar.ButtonData.OK_DONE);
-        ButtonType cancelButtonType = new ButtonType("Нет", ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.TOP_CENTER);
-        hBox.getChildren().add(new Card(propertyInformation));
-        dialog.getDialogPane().setContent(hBox);
-
-        return dialog;
+    private static void showPropertyDialog(String title, String header, GameQuestion gameQuestion, GameController gameController) {
+        Button ok = new Button("Да");
+        Button cancel = new Button("Нет");
+        SubWindow subWindow = SubWindow.loadWithoutContent();
+        if (subWindow != null) {
+            subWindow.setTitle(title);
+            VBox vBox = new VBox();
+            vBox.setAlignment(Pos.TOP_CENTER);
+            vBox.getStylesheets().add(MonopolyApplication.loadResource("styles/subWindow.css").toExternalForm());
+            vBox.setSpacing(7);
+            Text text = new Text(header);
+            text.getStyleClass().add("text");
+            text.setWrappingWidth(0.816 * SubWindow.WINDOW_WIDTH);
+            text.setTextAlignment(TextAlignment.CENTER);
+            vBox.getChildren().addAll(text, new Card(gameQuestion.getPropertyInformation()));
+            subWindow.setContent(vBox);
+            subWindow.addButton(ok);
+            ok.addEventHandler(ActionEvent.ACTION, (event) -> {
+                gameQuestion.setChoose(true);
+                gameController.sendResponse(gameQuestion);
+                subWindow.hide();
+            });
+            cancel.addEventHandler(ActionEvent.ACTION, (event) -> {
+                gameQuestion.setChoose(false);
+                gameController.sendResponse(gameQuestion);
+                subWindow.hide();
+            });
+            subWindow.addButton(cancel);
+            subWindow.show((Stage) Context.get("mainWindow"));
+        }
     }
 
-    public static List<PropertyInformation> showMortgagePropertyChoosingDialog
-            (List<PropertyInformation> propertyInformationList) {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Выбор недвижимости");
-        dialog.setTitle("Выберите имущество для продажи в залог");
+    public static void showMortgagePropertyChoosingDialog
+            (GameQuestion gameQuestion, GameController gameController) {
+        Button selectButton = new Button("Выбрать");
+        SubWindow subWindow = SubWindow.loadWithoutContent();
+        if (subWindow == null) return;
+        subWindow.setTitle("Выбор закладываемого имущества");
 
-        ButtonType buttonType = new ButtonType("Выбрать", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().clear();
-        dialog.getDialogPane().getButtonTypes().add(buttonType);
+        subWindow.addButton(selectButton);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         HBox hBox = new HBox();
-        hBox.getStylesheets().add(MonopolyApplication.loadResource("styles/main.css").toExternalForm());
-        hBox.getStyleClass().add("background");
 
-        for (int i = 0; i < propertyInformationList.size(); i++) {
-            Card card = new Card(propertyInformationList.get(i));
-            card.setId("property " + i);
+        for (int i = 0; i < gameQuestion.getPropertiesInformation().size(); i++) {
+            Card card = new Card(gameQuestion.getPropertiesInformation().get(i));
 
             card.addEventHandler(MouseEvent.MOUSE_CLICKED, (event) -> {
                 card.setSelected(!card.isSelected());
@@ -182,18 +201,26 @@ public class DialogFabric {
             hBox.setPrefHeight(card.getPrefHeight());
         }
 
+        selectButton.addEventHandler(ActionEvent.ACTION, (event) -> {
+            List<PropertyInformation> propertyInformationList = new ArrayList<>();
+            for (Node node: hBox.getChildren()) {
+                Card card = (Card)node;
+                if (card.isSelected()) propertyInformationList.add(card.getPropertyInformation());
+            }
+            gameQuestion.setPropertiesInformation(propertyInformationList);
+            gameController.sendResponse(gameQuestion);
+            subWindow.hide();
+        });
+
         hBox.setSpacing(3);
 
         scrollPane.setContent(hBox);
         scrollPane.setPrefHeight(hBox.getPrefHeight() + 30);
         scrollPane.setPrefWidth(600);
+        scrollPane.setPrefHeight(hBox.getPrefHeight());
 
-        dialog.getDialogPane().setContent(scrollPane);
+        subWindow.setContent(scrollPane);
 
-        dialog.showAndWait();
-
-        return hBox.getChildren().stream()
-                .filter((obj) -> ((Card)obj).isSelected())
-                .map((obj) -> ((Card)obj).getPropertyInformation()).toList();
+        subWindow.show((Stage) Context.get("mainWindow"));
     }
 }

@@ -5,16 +5,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="287.0" prefWidth="379.0" spacing="7.0" styleClass="background-sub" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.window.EscapeJailDialog">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="301.0" prefWidth="576.0" spacing="7.0" styleClass="background-sub" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.window.EscapeJailDialog">
    <stylesheets>
       <URL value="@../styles/main.css" />
       <URL value="@../styles/subWindow.css" />
    </stylesheets>
    <children>
-      <Button fx:id="payMoneyButton" mnemonicParsing="false" onAction="#payMoneyAction" prefWidth="300.0" text="Заплатить 50$" />
-      <Button fx:id="useButton" mnemonicParsing="false" onAction="#useAction" prefWidth="300.0">
+      <Button fx:id="payMoneyButton" mnemonicParsing="false" onAction="#payMoneyAction" prefWidth="470.0" text="Заплатить 50$" />
+      <Button fx:id="useButton" mnemonicParsing="false" onAction="#useAction" prefWidth="470.0">
          <graphic>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Использовать карточку &quot;Освободиться из тюрьмы&quot;" textAlignment="CENTER" wrappingWidth="209.8173370361328" />
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Использовать карточку &quot;Освободиться из тюрьмы&quot;" textAlignment="CENTER" wrappingWidth="430.0" />
          </graphic>
       </Button>
    </children>

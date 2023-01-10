@@ -1,5 +1,18 @@
 * {
+    -fx-font-family: 'KabelCTT Medium';
+    -fx-text-fill: black;
+}
+
+.text {
     -fx-font-size: 21px;
+}
+
+.property {
+    -fx-font-size: 12px;
+}
+
+ScrollPane {
+    -fx-background-color: transparent;
 }
 
 .player-name {

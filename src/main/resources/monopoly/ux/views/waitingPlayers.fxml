@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.WaitingPlayersController">
-   <children>
-      <HBox fx:id="hBox" alignment="TOP_CENTER" layoutX="-4.0" layoutY="-3.0" prefHeight="720.0" prefWidth="1280.0">
-         <children>
-            <Separator prefHeight="266.0" prefWidth="240.0" />
-            <Button fx:id="back" mnemonicParsing="false" onAction="#backAction" styleClass="back-button" text="Button">
-               <HBox.margin>
-                  <Insets right="10.0" top="10.0" />
-               </HBox.margin>
-            </Button>
-            <VBox fx:id="vBox" alignment="CENTER" prefHeight="720.0" prefWidth="1093.0">
-               <children>
-                  <Label fx:id="header" styleClass="header" text="Ожидание игроков" />
-                  <Separator orientation="VERTICAL" prefHeight="135.0" prefWidth="234.0" />
-                  <VBox fx:id="playersList" prefHeight="423.0" prefWidth="872.0">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
-                           <children>
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                     </children>
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
-                           <children>
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                     </children>
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
-                           <children>
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                     </children>
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="player-record">
-                           <children>
-                              <Label text="Label" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-               </children>
-            </VBox>
-            <Separator prefHeight="418.0" prefWidth="451.0" />
-         </children>
-      </HBox>
-   </children>
+<VBox fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="background" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monopoly.ux.controller.WaitingPlayersController">
+   <HBox fx:id="hBox" prefHeight="720.0" prefWidth="1280.0" spacing="7.0">
+      <Button fx:id="back" mnemonicParsing="false" onAction="#backAction" styleClass="back-button" text="Button"/>
+      <VBox fx:id="vBox" alignment="CENTER" prefHeight="700.0" prefWidth="946.0">
+         <Separator orientation="VERTICAL" prefHeight="200.0" styleClass="header-separator" />
+         <Label fx:id="header" styleClass="header" text="Ожидание игроков" />
+         <Separator orientation="VERTICAL" prefHeight="135.0" prefWidth="234.0" />
+         <VBox fx:id="playersList" prefHeight="423.0" prefWidth="872.0" spacing="3.0">
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <Label alignment="TOP_LEFT" text="Label" />
+               <padding>
+                  <Insets left="17.0" right="17.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="player-record" />
+                  <String fx:value="middle-color" />
+               </styleClass>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <Label alignment="TOP_LEFT" text="Label" />
+               <padding>
+                  <Insets left="17.0" right="17.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="player-record" />
+                  <String fx:value="middle-color" />
+               </styleClass>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <Label alignment="TOP_LEFT" text="Label" />
+               <padding>
+                  <Insets left="17.0" right="17.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="player-record" />
+                  <String fx:value="middle-color" />
+               </styleClass>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <Label alignment="TOP_LEFT" text="Label" />
+               <padding>
+                  <Insets left="17.0" right="17.0" />
+               </padding>
+               <styleClass>
+                  <String fx:value="player-record" />
+                  <String fx:value="middle-color" />
+               </styleClass>
+            </HBox>
+         </VBox>
+      </VBox>
+   </HBox>
    <stylesheets>
       <URL value="@../styles/main.css" />
       <URL value="@../styles/waitingPlayers.css" />
    </stylesheets>
-</Pane>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>

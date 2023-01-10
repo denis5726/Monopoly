@@ -3,6 +3,7 @@ package monopoly.ux.controller;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
@@ -12,7 +13,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import monopoly.context.Context;
-import monopoly.game.model.PlayerInfo;
+import monopoly.game.Game;
+import monopoly.game.model.GamePlayerInformation;
 import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
@@ -20,21 +22,18 @@ import monopoly.ux.SceneContext;
 import monopoly.ux.controller.game.Cell;
 import monopoly.ux.controller.game.Dice;
 import monopoly.ux.controller.game.UIPlayer;
-import monopoly.ux.model.Game;
-import monopoly.ux.model.GamePlayer;
+import monopoly.ux.model.UIGame;
+import monopoly.ux.model.GameQuestion;
 import monopoly.ux.model.QuestionType;
 import monopoly.ux.module.event.UIEvent;
-import monopoly.ux.window.ActivityWindow;
-import monopoly.ux.window.DialogFabric;
-import monopoly.ux.window.EscapeJailDialog;
-import monopoly.ux.window.PlayerInfoWindow;
+import monopoly.ux.window.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameController extends SceneController {
     @FXML
-    public Pane pane;
+    public VBox pane;
     @FXML
     public HBox hBox;
     @FXML
@@ -81,7 +80,7 @@ public class GameController extends SceneController {
     public Button escapeJailButton;
     private Dice dice1;
     private Dice dice2;
-    private Game game;
+    private UIGame uiGame;
     private List<UIPlayer> playerList;
     private Cell[] cells;
 
@@ -102,25 +101,36 @@ public class GameController extends SceneController {
         valuesGridPane.setPrefSize(0.75 * w, 0.11 * h);
         gameHBox.setPrefSize(0.75 * w, 0.888 * h);
 
-        playersVBox.setPrefSize(0.234 * w, 0.29 * h);
-        chatMessageField.setPrefSize(0.721 * leftPanelVBox.getPrefWidth(), 0.115 * h);
+        playersVBox.setPrefSize(0.234 * w, 0.294 * h);
+        chatPane.setPrefSize(0.24 * w, 0.261 * h);
+        chatMessageField.setPrefSize(0.184 * w, 0.115 * h);
 
-        double gameImageSize = Math.min(0.47 * w, 0.888 * h);
+        double gameHBoxHeight = 0.865 * h;
+        double gameImageSize = Math.min(0.479 * w, gameHBoxHeight);
         gamePane.setPrefSize(gameImageSize, gameImageSize);
         gamePane.setMaxSize(gameImageSize, gameImageSize);
-        rightPanelVBox.setPrefSize(0.25 * w, 0.888 * h);
+
+        double rightVBoxWidth = 0.247 * w;
+
+        rightPanelVBox.setPrefSize(rightVBoxWidth, gameHBoxHeight);
 
         gameImage.setFitWidth(gameImageSize);
         gameImage.setFitHeight(gameImageSize);
 
-        propertyPane.setPrefSize(0.25 * w, 0.58 * h);
+        propertyPane.setPrefSize(rightVBoxWidth, 0.625 * h);
+
+        propertyVBox.setPrefWidth(rightVBoxWidth);
+        propertyVBox.setPrefHeight(propertyPane.getHeight());
+
+        beginDialButton.setPrefWidth(rightVBoxWidth);
+        escapeJailButton.setPrefWidth(rightVBoxWidth);
 
         for (int i = 0; i < cells.length; ++i) {
             cells[i].onResize(i, gameImage.getFitWidth());
         }
     }
 
-    private Color getColor(int index) {
+    private Color getPlayerColor(int index) {
         return switch (index) {
             case 0 -> Color.RED;
             case 1 -> Color.BLUE;
@@ -132,54 +142,60 @@ public class GameController extends SceneController {
 
     @Override
     public void onCreateScene(SceneContext sceneContext) {
-        game = (Game) sceneContext.getProperty("game");
+        uiGame = (UIGame) sceneContext.getProperty("game");
 
-        playerList = new ArrayList<>();
+        loadPlayersList();
+        loadCells();
+        loadPlayersPanel();
 
-        for (int i = 0; i < game.getPlayers().size(); i++) {
-            UIPlayer UIPlayer = new UIPlayer();
-            UIPlayer.setName(game.getPlayers().get(i).getName());
-            UIPlayer.setBalance(1500);
-            Circle circle = new Circle();
-            circle.setRadius(10);
-            circle.setFill(getColor(i));
-            UIPlayer.setCircle(circle);
-            playerList.add(UIPlayer);
-        }
+        Game game = new Game(uiGame);
+        Context.put("currentGame", game);
 
-        cells = new Cell[40];
+        super.onCreateScene(sceneContext);
+    }
 
-        for (int i = 0; i < cells.length; i++) {
-            cells[i] = new Cell(gamePane);
-        }
-
+    private void loadPlayersPanel() {
         for (int i = 0; i < playerList.size(); i++) {
             getPlayerLabel(i, 0).setText(playerList.get(i).getName());
             getPlayerLabel(i, 1).setText("1500$");
             GridPane gridPane = (GridPane) playersVBox.getChildren().get(i);
-            gridPane.setOnContextMenuRequested((event) -> {
-                String playerName = ((Label) gridPane.getChildren().get(0)).getText();
-                List<UIPlayer> players = playerList.stream()
-                        .filter((obj) -> obj.getName().equals(playerName))
-                        .toList();
-                GamePlayer gamePlayer = new GamePlayer();
-                gamePlayer.setName(players.get(0).getName());
-                showPlayerInfo(gamePlayer);
-            });
-            ((Circle) gridPane.getChildren().get(2)).setFill(getColor(i));
+            gridPane.setOnContextMenuRequested((event) -> showPlayerInfo(((Label)gridPane.getChildren().get(0)).getText()));
+            ((Circle) gridPane.getChildren().get(2)).setFill(getPlayerColor(i));
         }
 
         for (int i = playerList.size(); i < playersVBox.getChildren().size(); ++i) {
             playersVBox.getChildren().get(i).setVisible(false);
         }
-
-        super.onCreateScene(sceneContext);
     }
 
-    private void showPlayerInfo(GamePlayer gamePlayer) {
+    private void loadCells() {
+        cells = new Cell[40];
+
+        for (int i = 0; i < cells.length; i++) {
+            cells[i] = new Cell(gamePane);
+        }
+    }
+
+    private void loadPlayersList() {
+        playerList = new ArrayList<>();
+
+        for (int i = 0; i < uiGame.getPlayers().size(); i++) {
+            UIPlayer UIPlayer = new UIPlayer();
+            UIPlayer.setName(uiGame.getPlayers().get(i).getName());
+            UIPlayer.setBalance(1500);
+            UIPlayer.setCurrent(uiGame.getPlayers().get(i).isCurrent());
+            Circle circle = new Circle();
+            circle.setRadius(10);
+            circle.setFill(getPlayerColor(i));
+            UIPlayer.setCircle(circle);
+            playerList.add(UIPlayer);
+        }
+    }
+
+    private void showPlayerInfo(String playerName) {
         ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
-        PlayerInfo playerInfo = moduleInterfaceGame.getPlayerInfo(gamePlayer);
-        PlayerInfoWindow.showWindow(playerInfo);
+        GamePlayerInformation gamePlayerInformation = moduleInterfaceGame.getPlayerInfo(playerName);
+        PlayerInfoWindow.showWindow(gamePlayerInformation);
     }
 
     private Label getPlayerLabel(int row, int column) {
@@ -189,7 +205,7 @@ public class GameController extends SceneController {
     @Override
     protected void onSetPlayerMoney(UIEvent uiEvent) {
         UIPlayer UIPlayer = new UIPlayer();
-        UIPlayer.setName(uiEvent.getGamePlayer().getName());
+        UIPlayer.setName(uiEvent.getPlayerName());
         int index = playerList.indexOf(UIPlayer);
         UIPlayer original = playerList.get(index);
         if (original.isCurrent()) balance.setText("Баланс: " + uiEvent.getAmount());
@@ -205,7 +221,7 @@ public class GameController extends SceneController {
             Label propertyStatus = (Label) childPane.getChildren().get(1);
             if (propertyName.getText().equals(uiEvent.getPropertyName())) {
                 propertyStatus.setText(getPropertyStatusName(uiEvent.getAmount()));
-                setStylePropertyByStatus(childPane, uiEvent.getAmount());
+                setPaneStyleClassByStatus(childPane, uiEvent.getAmount());
                 return;
             }
         }
@@ -214,11 +230,11 @@ public class GameController extends SceneController {
         propertyVBox.getChildren().add(pane);
     }
 
-    private void setStylePropertyByStatus(GridPane pane, int propertyStatus) {
+    private void setPaneStyleClassByStatus(GridPane pane, int propertyStatus) {
         if (propertyStatus == -1) {
-            pane.styleProperty().setValue("-fx-background-color: rgb(230, 100, 100);");
+            pane.getStyleClass().add("in-mortgage");
         }
-        else pane.styleProperty().setValue("");
+        else pane.getStyleClass().remove("in-mortgage");
     }
 
     private String getPropertyStatusName(int propertyStatus) {
@@ -237,14 +253,16 @@ public class GameController extends SceneController {
 
     private void setPropertyPane(GridPane pane, String propertyName, int propertyStatus) {
         ColumnConstraints constraints1 = new ColumnConstraints();
-        constraints1.setPrefWidth(200);
+        constraints1.setPrefWidth(170);
         ColumnConstraints constraints2 = new ColumnConstraints();
-        constraints2.setPrefWidth(100);
+        constraints2.setPrefWidth(130);
         pane.getStyleClass().add("property");
-        setStylePropertyByStatus(pane, propertyStatus);
+        pane.getStyleClass().add("dark-color");
+        setPaneStyleClassByStatus(pane, propertyStatus);
+        pane.setPadding(new Insets(10, 10, 10, 10));
         pane.setHgap(10);
         pane.setVgap(3);
-        pane.setPrefHeight(30);
+        pane.setPrefHeight(38);
         pane.getColumnConstraints().addAll(constraints1, constraints2);
         Label name = new Label(propertyName);
         Label status = new Label(getPropertyStatusName(propertyStatus));
@@ -255,7 +273,7 @@ public class GameController extends SceneController {
     protected void onRemovePlayerTo(UIEvent uiEvent) {
         UIPlayer UIPlayer = playerList.stream()
                 .filter((obj) -> obj.getName().equals(
-                        uiEvent.getGamePlayer().getName())).toList().get(0);
+                        uiEvent.getPlayerName())).toList().get(0);
         for (Cell cell : cells) cell.removePlayer(UIPlayer);
         cells[uiEvent.getPosition()].addPlayer(UIPlayer);
     }
@@ -267,23 +285,23 @@ public class GameController extends SceneController {
 
     @Override
     protected void onShowDialog(UIEvent uiEvent) {
-        ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
         if (uiEvent.getQuestion().getType() == QuestionType.BUY_CONFIRMATION) {
-            uiEvent.getQuestion().setChoose(DialogFabric.showBuyConfirmation(
-                    uiEvent.getQuestion().getPropertyInformation()));
+            DialogFabric.showBuyConfirmation(uiEvent.getQuestion(), this);
         }
         else if (uiEvent.getQuestion().getType() == QuestionType.AUCTION_CONFIRMATION) {
-            uiEvent.getQuestion().setChoose(DialogFabric.showAuctionConfirmation(
-                    uiEvent.getQuestion().getPropertyInformation()));
+            DialogFabric.showAuctionConfirmation(uiEvent.getQuestion(), this);
         }
-        else uiEvent.getQuestion().setPropertiesInformation(DialogFabric.showMortgagePropertyChoosingDialog(
-                uiEvent.getQuestion().getPropertiesInformation()));
-        moduleInterfaceGame.sendResponse(uiEvent.getQuestion());
+        else DialogFabric.showMortgagePropertyChoosingDialog(uiEvent.getQuestion(), this);
+    }
+
+    public void sendResponse(GameQuestion gameQuestion) {
+        ModuleInterfaceGame moduleInterfaceGame = (ModuleInterfaceGame) Context.get("moduleInterfaceGame");
+        moduleInterfaceGame.sendResponse(gameQuestion);
     }
 
     @Override
     protected void onSetNextStep(UIEvent uiEvent) {
-        currentStepPlayer.setText("Ходит " + uiEvent.getGamePlayer());
+        currentStepPlayer.setText("Ходит " + uiEvent.getPlayerName());
     }
 
     @Override
@@ -334,7 +352,11 @@ public class GameController extends SceneController {
     }
 
     public void backButtonAction(ActionEvent actionEvent) {
-        if (DialogFabric.showQuitGame()) MonopolyApplication.setScene("mainMenu", new SceneContext());
+        DialogFabric.showQuitGame(this);
+    }
+
+    public void goBackTransition() {
+        MonopolyApplication.setScene("mainMenu", new SceneContext());
     }
 
     public void sendMessageAction(ActionEvent actionEvent) {
@@ -346,7 +368,7 @@ public class GameController extends SceneController {
     }
 
     public void beginDialAction(ActionEvent actionEvent) {
-        ActivityWindow.showDialog();
+        ActivityWindow.showDialog(playerList);
     }
 
     public void escapeJailAction(ActionEvent actionEvent) {

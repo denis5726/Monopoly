@@ -1,8 +1,23 @@
 .background-sub {
-    -fx-background-color: rgb(50, 170, 50);
-    -fx-background-radius: 3px;
+    -fx-background-color: white;
 }
 
-Label.title {
-    -fx-font-size: 30px;
+.title {
+    -fx-font-size: 29px;
+    -fx-text-fill: white;
+    -fx-font-family: 'KabelCTT Medium Bold', Arial;
+}
+
+.close-button {
+    -fx-background-color: red;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+}
+
+.close-button:hover {
+    -fx-background-color: rgb(255, 50, 50);
+}
+
+.close-button:pressed {
+    -fx-background-color: rgb(255, 10, 10);
 }

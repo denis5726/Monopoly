@@ -2,10 +2,9 @@ package monopoly.net.module;
 
 import monopoly.settings.SettingsContainer;
 import monopoly.ux.model.CreatedGame;
-import monopoly.ux.model.GamePlayer;
+import monopoly.ux.model.GameQuestion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ModuleInterfaceNetImpl implements ModuleInterfaceNet {
@@ -51,6 +50,11 @@ public class ModuleInterfaceNetImpl implements ModuleInterfaceNet {
         }
 
         return list;
+    }
+
+    @Override
+    public void sendQuestion(String playerName, GameQuestion gameQuestion, int waitingTime) {
+
     }
 
     @Override
