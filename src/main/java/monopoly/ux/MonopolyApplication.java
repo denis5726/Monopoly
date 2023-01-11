@@ -10,15 +10,18 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import monopoly.context.Context;
-import monopoly.game.model.PropertyColor;
-import monopoly.game.model.PropertyInformation;
-import monopoly.game.model.PropertyType;
+import monopoly.game.module.PropertyColor;
+import monopoly.game.module.PropertyInformation;
+import monopoly.game.module.PropertyType;
+import monopoly.game.module.GameQuestion;
 import monopoly.game.module.ModuleInterfaceGameImpl;
+import monopoly.game.module.GameQuestionType;
 import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNetImpl;
+import monopoly.net.module.Player;
 import monopoly.ux.controller.SceneController;
-import monopoly.ux.controller.game.UIPlayer;
-import monopoly.ux.model.*;
+import monopoly.ux.module.UIGame;
+import monopoly.ux.module.UIPlayer;
 import monopoly.ux.module.ModuleInterfaceUI;
 import monopoly.ux.module.ModuleInterfaceUIImpl;
 import monopoly.settings.SettingsContainer;
@@ -234,14 +237,14 @@ public class MonopolyApplication extends Application {
                 }
                 case "c" -> {
                     GameQuestion question = new GameQuestion();
-                    question.setType(QuestionType.valueOf(QuestionType.values()[(int) (Math.random() *
-                                                QuestionType.values().length)].toString()));
-                    if (question.getType() == QuestionType.BUY_CONFIRMATION) {
+                    question.setType(GameQuestionType.valueOf(GameQuestionType.values()[(int) (Math.random() *
+                                                GameQuestionType.values().length)].toString()));
+                    if (question.getType() == GameQuestionType.BUY_CONFIRMATION) {
                         PropertyInformation propertyInformation = new PropertyInformation();
                         randomPropertyInformation.accept(propertyInformation);
                         question.setPropertyInformation(propertyInformation);
                     }
-                    else if (question.getType() == QuestionType.AUCTION_CONFIRMATION) {
+                    else if (question.getType() == GameQuestionType.AUCTION_CONFIRMATION) {
                         PropertyInformation propertyInformation = new PropertyInformation();
                         randomPropertyInformation.accept(propertyInformation);
                         question.setPropertyInformation(propertyInformation);

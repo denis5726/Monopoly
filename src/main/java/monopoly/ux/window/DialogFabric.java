@@ -15,13 +15,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import monopoly.context.Context;
-import monopoly.game.model.PropertyInformation;
-import monopoly.game.module.ModuleInterfaceGame;
+import monopoly.game.module.PropertyInformation;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.controller.GameController;
-import monopoly.ux.controller.game.Card;
-import monopoly.ux.model.GameQuestion;
+import monopoly.ux.model.Card;
+import monopoly.game.module.GameQuestion;
 
 import java.util.ArrayList;
 import java.util.List;

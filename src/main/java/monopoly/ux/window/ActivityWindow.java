@@ -11,12 +11,12 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import monopoly.context.Context;
-import monopoly.game.model.GameActivity;
-import monopoly.game.model.GameActivityType;
+import monopoly.game.module.GameActivity;
+import monopoly.game.module.GameActivityType;
 import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.controller.SceneController;
-import monopoly.ux.controller.game.UIPlayer;
+import monopoly.ux.module.UIPlayer;
 
 import java.util.List;
 import java.util.Map;

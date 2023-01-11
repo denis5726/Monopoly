@@ -1,8 +1,7 @@
 package monopoly.net.module;
 
 import monopoly.settings.SettingsContainer;
-import monopoly.ux.model.CreatedGame;
-import monopoly.ux.model.GameQuestion;
+import monopoly.game.module.GameQuestion;
 
 import java.util.ArrayList;
 import java.util.List;

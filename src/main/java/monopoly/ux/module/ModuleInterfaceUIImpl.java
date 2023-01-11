@@ -1,7 +1,9 @@
 package monopoly.ux.module;
 
+import monopoly.game.module.GameQuestion;
+import monopoly.net.module.CreatedGame;
+import monopoly.net.module.Player;
 import monopoly.ux.controller.SceneController;
-import monopoly.ux.model.*;
 import monopoly.ux.module.event.UIEvent;
 import monopoly.ux.module.event.UIEventType;
 

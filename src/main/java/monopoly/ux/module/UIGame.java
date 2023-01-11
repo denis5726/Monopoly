@@ -1,6 +1,6 @@
-package monopoly.ux.model;
+package monopoly.ux.module;
 
-import monopoly.ux.controller.game.UIPlayer;
+import monopoly.ux.module.UIPlayer;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package monopoly.ux.model;
+package monopoly.net.module;
 
 public class CreatedGame {
     private String title;

@@ -14,17 +14,17 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.game.Game;
-import monopoly.game.model.GamePlayerInformation;
+import monopoly.game.module.GamePlayerInformation;
 import monopoly.game.module.ModuleInterfaceGame;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.controller.game.Cell;
-import monopoly.ux.controller.game.Dice;
-import monopoly.ux.controller.game.UIPlayer;
-import monopoly.ux.model.UIGame;
-import monopoly.ux.model.GameQuestion;
-import monopoly.ux.model.QuestionType;
+import monopoly.ux.model.Cell;
+import monopoly.ux.model.Dice;
+import monopoly.ux.module.UIPlayer;
+import monopoly.ux.module.UIGame;
+import monopoly.game.module.GameQuestion;
+import monopoly.game.module.GameQuestionType;
 import monopoly.ux.module.event.UIEvent;
 import monopoly.ux.window.*;
 
@@ -285,10 +285,10 @@ public class GameController extends SceneController {
 
     @Override
     protected void onShowDialog(UIEvent uiEvent) {
-        if (uiEvent.getQuestion().getType() == QuestionType.BUY_CONFIRMATION) {
+        if (uiEvent.getQuestion().getType() == GameQuestionType.BUY_CONFIRMATION) {
             DialogFabric.showBuyConfirmation(uiEvent.getQuestion(), this);
         }
-        else if (uiEvent.getQuestion().getType() == QuestionType.AUCTION_CONFIRMATION) {
+        else if (uiEvent.getQuestion().getType() == GameQuestionType.AUCTION_CONFIRMATION) {
             DialogFabric.showAuctionConfirmation(uiEvent.getQuestion(), this);
         }
         else DialogFabric.showMortgagePropertyChoosingDialog(uiEvent.getQuestion(), this);

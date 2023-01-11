@@ -1,6 +1,9 @@
 package monopoly.ux.module.event;
 
-import monopoly.ux.model.*;
+import monopoly.game.module.GameQuestion;
+import monopoly.net.module.CreatedGame;
+import monopoly.net.module.Player;
+import monopoly.ux.module.UIGame;
 
 import java.util.HashMap;
 import java.util.List;
@@ -175,11 +178,11 @@ public class UIEvent {
         this.inJail = inJail;
     }
 
-    public monopoly.ux.model.UIGame getUIGame() {
+    public monopoly.ux.module.UIGame getUIGame() {
         return UIGame;
     }
 
-    public void setUIGame(monopoly.ux.model.UIGame UIGame) {
+    public void setUIGame(monopoly.ux.module.UIGame UIGame) {
         this.UIGame = UIGame;
     }
 

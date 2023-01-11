@@ -1,5 +1,7 @@
 package monopoly.game.model;
 
+import monopoly.game.module.GamePlayerInformation;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
