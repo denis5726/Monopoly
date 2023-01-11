@@ -1,4 +1,4 @@
-package monopoly.game.model;
+package monopoly.game.module;
 
 public enum PropertyType {
     PROPERTY, RAILWAY_STATION, PAYMENT_FIELD, JAIL,

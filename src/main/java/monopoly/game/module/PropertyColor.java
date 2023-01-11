@@ -1,4 +1,4 @@
-package monopoly.game.model;
+package monopoly.game.module;
 
 public enum PropertyColor {
     BROWN, BLUE, PINK, ORANGE, RED, YELLOW, GREEN, DARKBLUE

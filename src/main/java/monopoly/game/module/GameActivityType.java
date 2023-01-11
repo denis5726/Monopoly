@@ -1,4 +1,4 @@
-package monopoly.game.model;
+package monopoly.game.module;
 
 public enum GameActivityType {
     BUY, SELL, BUY_JAIL_CARD

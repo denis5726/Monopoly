@@ -1,8 +1,10 @@
 package monopoly.game;
 
 import monopoly.game.model.GamePlayer;
-import monopoly.ux.controller.game.UIPlayer;
-import monopoly.ux.model.UIGame;
+import monopoly.game.model.Property;
+import monopoly.game.module.PropertyInformation;
+import monopoly.ux.module.UIPlayer;
+import monopoly.ux.module.UIGame;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,14 @@ public class Game {
         }
     }
 
+    public void onNextStep(int value_1, int value_2) {
+
+    }
+
+    public void exit() {
+
+    }
+
     public GamePlayer getCurrentStepPlayer() {
         return currentStepPlayer;
     }
@@ -31,5 +41,9 @@ public class Game {
 
     public List<GamePlayer> getPlayers() {
         return players;
+    }
+
+    public List<PropertyInformation> getDefaultPropertiesForMortgage(List<PropertyInformation> propertyInformationList) {
+        return propertyInformationList;
     }
 }

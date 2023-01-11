@@ -1,10 +1,5 @@
 package monopoly.game.module;
 
-import monopoly.game.model.GameActivity;
-import monopoly.game.model.GamePlayerInformation;
-import monopoly.ux.model.GameQuestion;
-import monopoly.game.model.PropertyInformation;
-
 import java.util.List;
 
 public interface ModuleInterfaceGame {
