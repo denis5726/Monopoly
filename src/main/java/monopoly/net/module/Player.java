@@ -1,4 +1,4 @@
-package monopoly.ux.model;
+package monopoly.net.module;
 
 import java.util.Objects;
 

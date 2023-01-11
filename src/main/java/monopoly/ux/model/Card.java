@@ -1,4 +1,4 @@
-package monopoly.ux.controller.game;
+package monopoly.ux.model;
 
 import javafx.geometry.Insets;
 import javafx.scene.layout.AnchorPane;
@@ -11,8 +11,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import monopoly.game.model.PropertyColor;
-import monopoly.game.model.PropertyInformation;
+import monopoly.game.module.PropertyColor;
+import monopoly.game.module.PropertyInformation;
 
 public class Card extends AnchorPane {
     private static final Font font = new Font("KabelCTT Medium", 12);

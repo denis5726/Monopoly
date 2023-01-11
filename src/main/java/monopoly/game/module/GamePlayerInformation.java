@@ -1,4 +1,4 @@
-package monopoly.game.model;
+package monopoly.game.module;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package monopoly.ux.controller.game;
+package monopoly.ux.model;
 
 import javafx.geometry.Point2D;
 import javafx.scene.layout.AnchorPane;
@@ -6,6 +6,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import monopoly.ux.module.UIPlayer;
 
 import java.util.ArrayList;
 import java.util.List;

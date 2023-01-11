@@ -2,10 +2,14 @@ package monopoly.game;
 
 import monopoly.context.Context;
 import monopoly.game.model.*;
+import monopoly.game.module.GamePlayerInformation;
+import monopoly.game.module.GameQuestionType;
+import monopoly.game.module.PropertyInformation;
+import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNet;
-import monopoly.ux.controller.game.UIPlayer;
-import monopoly.ux.model.GameQuestion;
-import monopoly.ux.model.UIGame;
+import monopoly.ux.module.UIPlayer;
+import monopoly.game.module.GameQuestion;
+import monopoly.ux.module.UIGame;
 import monopoly.ux.module.ModuleInterfaceUI;
 
 import java.util.ArrayList;
@@ -17,6 +21,12 @@ public class IOLayer {
     private final ModuleInterfaceUI moduleInterfaceUI;
     private final ModuleInterfaceNet moduleInterfaceNet;
     private final Game game;
+    private Thread responseObserverThread;
+    private Thread nextStepObserverThread;
+    private int currentValue_1;
+    private int currentValue_2;
+    private GameQuestion currentResponse;
+    private boolean dicesUpdated;
 
     public IOLayer(Game game, UIGame uiGame) {
         this.game = game;
@@ -44,28 +54,116 @@ public class IOLayer {
         moduleInterfaceUI.removePlayerTo(gamePlayer.getName(), position);
     }
 
-    public void setHomeNum(int position, int num) {
-
-    }
-
-    public void sendResponse(GameQuestion question) {
-
-    }
-
-    public void sendQuestion(GamePlayer gamePlayer, GameQuestion question, int waitingTime) {
+    private GameQuestion sendQuestion(GamePlayer gamePlayer, GameQuestion question, int waitingTime) {
         if (isCurrent(gamePlayer)) moduleInterfaceUI.showDialog(question, waitingTime);
         else moduleInterfaceNet.sendQuestion(gamePlayer.getName(), question, waitingTime);
+
+        GameQuestion response = null;
+
+        responseObserverThread = Thread.currentThread();
+
+        try {
+            Thread.sleep(waitingTime * 1000L);
+        } catch (InterruptedException e) {
+            response = currentResponse;
+        }
+
+        return response;
+    }
+
+    public boolean sendBuyConfirmation(GamePlayer gamePlayer, Property property, int waitingTime) {
+        GameQuestion gameQuestion = new GameQuestion();
+        gameQuestion.setType(GameQuestionType.BUY_CONFIRMATION);
+        gameQuestion.setPropertyInformation(property.getPropertyInformation());
+
+        GameQuestion response = sendQuestion(gamePlayer, gameQuestion, waitingTime);
+
+        if (response == null) return false;
+        else return response.isChoose();
+    }
+
+    public boolean sendAuctionConfirmation(GamePlayer gamePlayer, Property property, int waitingTime) {
+        GameQuestion gameQuestion = new GameQuestion();
+        gameQuestion.setType(GameQuestionType.AUCTION_CONFIRMATION);
+        gameQuestion.setPropertyInformation(property.getPropertyInformation());
+
+        GameQuestion response = sendQuestion(gamePlayer, gameQuestion, waitingTime);
+
+        if (response == null) return false;
+        else return response.isChoose();
+    }
+
+    public List<Property> sendMortgagePropertyChoosing(GamePlayer gamePlayer, int waitingTime) {
+        List<PropertyInformation> propertyForMortgage = new ArrayList<>();
+        for (Property property: gamePlayer.getProperties().keySet()) {
+            propertyForMortgage.add(property.getPropertyInformation());
+        }
+
+        GameQuestion gameQuestion = new GameQuestion();
+        gameQuestion.setType(GameQuestionType.MORTGAGE_PROPERTY_CHOOSING);
+        gameQuestion.setPropertiesInformation(propertyForMortgage);
+
+        GameQuestion response = sendQuestion(gamePlayer, gameQuestion, waitingTime);
+
+        if (response == null) {
+            response = new GameQuestion();
+            response.setPropertiesInformation(game.getDefaultPropertiesForMortgage(propertyForMortgage));
+        }
+
+        List<Property> selectedPropertiesForMortgage = new ArrayList<>();
+
+        for (Property property : gamePlayer.getProperties().keySet()) {
+            if (response.getPropertiesInformation().contains(property.getPropertyInformation())) {
+                selectedPropertiesForMortgage.add(property);
+            }
+        }
+
+        return selectedPropertiesForMortgage;
     }
 
     public void setInJail(boolean inJail) {
         moduleInterfaceUI.setInJail(inJail);
     }
 
-    public void setStepCountdown(int stepCountdown) {
+    public void waitToNextStep(int stepCountdown) {
+        nextStepObserverThread = Thread.currentThread();
 
+        try {
+            while (stepCountdown > 0) {
+                moduleInterfaceUI.setStepCountdown(stepCountdown);
+                stepCountdown--;
+                Thread.sleep(1000);
+            }
+        } catch (InterruptedException ignored) {
+
+        }
+
+        if (!dicesUpdated) {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ignored) {
+
+            }
+        }
+
+        if (!dicesUpdated) {
+            Logger.error("Server connection lost");
+            game.exit();
+            return;
+        }
+
+        game.onNextStep(currentValue_1, currentValue_2);
+
+        dicesUpdated = false;
     }
 
-    public void showDices(int value_1, int value_2) {
+    public void setNextStepDices(int value_1, int value_2) {
+        currentValue_1 = value_1;
+        currentValue_2 = value_2;
+        dicesUpdated = true;
+
+        nextStepObserverThread.interrupt();
+
         moduleInterfaceUI.showDices(value_1, value_2);
     }
 
@@ -73,8 +171,15 @@ public class IOLayer {
         moduleInterfaceUI.setNextStep(gamePlayer.getName());
     }
 
-    public void setProperty(String name, int amount) {
+    public void setProperty(GamePlayer gamePlayer, Property property) {
+        if (isCurrent(gamePlayer)) moduleInterfaceUI.setProperty(property.getPropertyInformation().getName(),
+                property.getAmount());
+        moduleInterfaceUI.setHomeNum(property.getPropertyInformation().getId(), property.getAmount());
+    }
 
+    public void sendResponse(GameQuestion question) {
+        currentResponse = question;
+        responseObserverThread.interrupt();
     }
 
     public PropertyInformation getPropertyInformation(String name) {

@@ -3,16 +3,9 @@ package monopoly.game.module;
 import monopoly.context.Context;
 import monopoly.game.Game;
 import monopoly.game.IOLayer;
-import monopoly.game.model.GameActivity;
-import monopoly.game.model.GamePlayerInformation;
 import monopoly.log.Logger;
-import monopoly.ux.model.GameQuestion;
-import monopoly.game.model.PropertyInformation;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ModuleInterfaceGameImpl implements ModuleInterfaceGame {
     @Override

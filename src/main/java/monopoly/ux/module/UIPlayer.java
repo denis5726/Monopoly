@@ -1,4 +1,4 @@
-package monopoly.ux.controller.game;
+package monopoly.ux.module;
 
 import javafx.scene.shape.Circle;
 

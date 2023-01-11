@@ -1,15 +1,12 @@
-package monopoly.ux.model;
-
-import monopoly.game.model.PropertyInformation;
+package monopoly.game.module;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameQuestion {
-    private QuestionType type;
+    private GameQuestionType type;
     private PropertyInformation propertyInformation;
     private List<PropertyInformation> propertiesInformation;
-    private String propertyName;
     private boolean choose;
 
     public GameQuestion() {
@@ -17,11 +14,11 @@ public class GameQuestion {
         propertiesInformation = new ArrayList<>();
     }
 
-    public QuestionType getType() {
+    public GameQuestionType getType() {
         return type;
     }
 
-    public void setType(QuestionType type) {
+    public void setType(GameQuestionType type) {
         this.type = type;
     }
 
@@ -31,14 +28,6 @@ public class GameQuestion {
 
     public void setPropertyInformation(PropertyInformation propertyInformation) {
         this.propertyInformation = propertyInformation;
-    }
-
-    public String getPropertyName() {
-        return propertyName;
-    }
-
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
     }
 
     public List<PropertyInformation> getPropertiesInformation() {

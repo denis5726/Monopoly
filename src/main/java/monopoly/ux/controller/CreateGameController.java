@@ -10,11 +10,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import monopoly.context.Context;
-import monopoly.log.Logger;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.model.CreatedGame;
+import monopoly.net.module.CreatedGame;
 import monopoly.ux.window.AlertWindowFabric;
 
 public class CreateGameController extends SceneController {

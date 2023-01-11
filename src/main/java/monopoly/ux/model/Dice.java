@@ -1,4 +1,4 @@
-package monopoly.ux.controller.game;
+package monopoly.ux.model;
 
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;

@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import monopoly.context.Context;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.model.Player;
+import monopoly.net.module.Player;
 import monopoly.ux.module.event.UIEvent;
 
 import java.util.ArrayList;

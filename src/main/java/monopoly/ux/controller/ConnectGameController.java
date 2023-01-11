@@ -15,7 +15,7 @@ import monopoly.context.Context;
 import monopoly.net.module.ModuleInterfaceNet;
 import monopoly.ux.MonopolyApplication;
 import monopoly.ux.SceneContext;
-import monopoly.ux.model.CreatedGame;
+import monopoly.net.module.CreatedGame;
 import monopoly.ux.module.event.UIEvent;
 import monopoly.ux.window.AlertWindowFabric;
 import monopoly.ux.window.DialogFabric;

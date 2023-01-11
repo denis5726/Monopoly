@@ -6,7 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import monopoly.context.Context;
-import monopoly.game.model.GamePlayerInformation;
+import monopoly.game.module.GamePlayerInformation;
 
 import java.util.ArrayList;
 import java.util.List;

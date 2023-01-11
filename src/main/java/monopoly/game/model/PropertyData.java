@@ -1,5 +1,9 @@
 package monopoly.game.model;
 
+import monopoly.game.module.PropertyColor;
+import monopoly.game.module.PropertyInformation;
+import monopoly.game.module.PropertyType;
+
 import java.util.Arrays;
 import java.util.List;
 
